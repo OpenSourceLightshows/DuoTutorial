@@ -1,0 +1,60 @@
+name: Deploy Website to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main  # Or your default branch
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v3
+
+    - name: Checkout Vortex Engine Duo Branch
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+        repository: 'StoneOrbits/VortexEngine'
+        path: 'VortexEngine'
+        ref: 'duo'
+
+    # Install Emscripten dependencies
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y python3 nodejs cmake
+
+    # Install Emscripten
+    - name: Install Emscripten
+      run: |
+        git clone https://github.com/emscripten-core/emsdk.git
+        cd emsdk
+        ./emsdk install latest
+        ./emsdk activate latest
+        source ./emsdk_env.sh
+
+    # Build WebAssembly for Duo
+    - name: Build WebAssembly with Emscripten
+      run: |
+        source emsdk/emsdk_env.sh
+        cd VortexEngine/VortexEngine/VortexLib
+        make clean
+        make -j wasm
+
+    # Move artifacts to correct location for GitHub Pages
+    - name: Move Build Artifacts
+      run: |
+        mkdir -p public/js
+        cp VortexEngine/VortexEngine/VortexLib/VortexLib.js public/js/VortexLib.js
+        cp VortexEngine/VortexEngine/VortexLib/VortexLib.wasm public/js/VortexLib.wasm
+
+    # Deploy to GitHub Pages
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./public
+
