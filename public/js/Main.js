@@ -47,7 +47,7 @@ VortexLib().then(vortexLib => {
   const tutorial = new Tutorial(vortexLib, lightshow);
 
   // Check if the welcome modal should be shown
-  const showWelcome = true;
+  const showWelcome = localStorage.getItem('showWelcome') !== 'false';
 
   if (showWelcome) {
     const welcomeModal = document.createElement('div');

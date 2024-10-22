@@ -14,9 +14,9 @@ export default class Lightshow {
     this.ctx = this.canvas.getContext('2d');
     this.dotSize = 25;
     this.blurFac = 5;
-    this.radius = 300;
-    this.tickRate = 10;
-    this.trailSize = 1;
+    this.radius = ((this.canvas.width > this.canvas.height) ? this.canvas.height : this.canvas.width) / 3;
+    this.tickRate = 20;
+    this.trailSize = 10;
     this.spread = 50;
     this.angle = 0;
     this.currentShape = 'circle'; // Default shape
@@ -131,11 +131,12 @@ export default class Lightshow {
 
   // function to set the shape
   setShape(shape) {
-    if (this.currentShape === shape) {
-      this.direction *= -1;
-    } else {
-      this.currentShape = shape;
-    }
+    // no change shape
+    //if (this.currentShape === shape) {
+    //  this.direction *= -1;
+    //} else {
+    //  this.currentShape = shape;
+    //}
   }
 
   draw() {
@@ -201,7 +202,6 @@ export default class Lightshow {
   feedCirclePoints() {
     const centerX = (this.canvas.width / 2);
     const centerY = this.canvas.height / 2;
-    let baseRadius = Math.min(centerX, centerY) - (500 - parseInt(this.radius));
 
     for (let i = 0; i < this.tickRate; i++) {
       const leds = this.vortexLib.Tick();
@@ -220,7 +220,7 @@ export default class Lightshow {
       }
 
       leds.forEach((col, index) => {
-        let radius = baseRadius + index * this.spread; // Adjust this value to control the distance between rings
+        let radius = this.radius + (index * this.spread);
         const x = centerX + radius * Math.cos(this.angle);
         const y = centerY + radius * Math.sin(this.angle);
         if (!col) {

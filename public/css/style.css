@@ -1,30 +1,57 @@
-/* Style for the canvas and modal */
+/* =======================================
+   Global Styles for Body and Canvas
+   ======================================= */
+
 body, html {
   margin: 0;
   padding: 0;
   height: 100%;
   width: 100%;
   display: flex;
-  justify-content: center;
-  align-items: center;
+  flex-direction: column;
+  overflow: hidden; /* Prevents overflow in case of larger content */
 }
 
 canvas {
   border: 1px solid black;
+  width: 100%;
+  display: block; /* Removes extra space below the canvas */
+  background-color: black; /* Background for visualization */
+  position: relative;
+  height: 75vh; /* Default height for wide screens */
 }
 
-button {
-  margin-top: 10px;
-  padding: 10px 20px;
-  cursor: pointer;
+/* Tutorial overlay positioned at the bottom */
+.tutorial-overlay {
+  position: absolute; /* Positioned within the viewport */
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 25vh; /* Default height for wide screens */
+  background-color: rgba(30, 30, 30, 0.95); /* Semi-transparent background */
+  z-index: 1000; /* Ensure it stays on top */
+  padding: 20px;
+  box-sizing: border-box;
 }
 
-label {
-  display: block;
-  margin-top: 10px;
+/* =======================================
+   Responsive Layout for Narrow Screens
+   ======================================= */
+
+@media (max-width: 768px) {
+  canvas {
+    height: 60vh; /* Reduced height for smaller screens */
+  }
+
+  .tutorial-overlay {
+    height: 40vh; /* Increased height for tutorial content on smaller screens */
+  }
 }
 
-/* Modal Styles */
+/* =======================================
+   Modal Styles
+   ======================================= */
+
 .modal {
   position: fixed;
   z-index: 1000;
@@ -33,6 +60,7 @@ label {
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent backdrop */
+  display: flex;
   justify-content: center;
   align-items: center;
 }
@@ -50,7 +78,6 @@ label {
 .modal-content input[type="text"] {
   width: 100%;
   padding: 10px;
-  padding-right: 0px;
   margin: 10px 0px;
   border: 1px solid #454545;
   border-radius: 4px;
@@ -93,29 +120,15 @@ label {
   cursor: pointer;
 }
 
-
-/* Responsive Tutorial Overlay */
-.tutorial-overlay {
-  position: fixed;
-  z-index: 1000;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
+/* =======================================
+   Tutorial Content Styling
+   ======================================= */
 
 .tutorial-content {
-  background-color: #1e1e1e;
-  padding: 30px;
-  border-radius: 10px;
-  color: #fff;
+  max-width: 600px;
+  margin: 0 auto; /* Center the tutorial content */
   text-align: center;
-  max-width: 400px;
-  width: 80%;
-  margin: 20px;
+  color: #fff;
 }
 
 .tutorial-step-title {
@@ -123,10 +136,19 @@ label {
   margin-bottom: 15px;
 }
 
+.tutorial-step-content {
+  font-size: 16px;
+  margin-bottom: 20px;
+}
+
+/* =======================================
+   Tutorial Actions (Prev, Next, Skip)
+   ======================================= */
+
 .tutorial-actions {
-  margin-top: 20px;
   display: flex;
   justify-content: space-between;
+  margin-top: 20px;
 }
 
 .tutorial-actions button {
@@ -166,11 +188,13 @@ label {
   border-color: #d9534f;
 }
 
-/* Media query for mobile responsiveness */
+/* =======================================
+   Responsive Layout for Smaller Screens
+   ======================================= */
+
 @media (max-width: 768px) {
   .tutorial-content {
     width: 90%;
-    padding: 20px;
   }
 
   .tutorial-step-title {

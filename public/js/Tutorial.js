@@ -22,15 +22,6 @@ export default class Tutorial {
   init() {
     this.createTutorialOverlay();
     this.updateTutorialStep(this.currentStep);
-      this.vortexLib.Vortex.setTickrate(1000);
-
-    //document.getElementById('nextStep').addEventListener('mousedown', () => {
-    //  this.vortexLib.Vortex.pressButton(0);
-    //});
-
-    //document.getElementById('nextStep').addEventListener('mouseup', () => {
-    //  this.vortexLib.Vortex.releaseButton(0);
-    //});
 
     document.getElementById('nextStep').addEventListener('click', () => {
     //  this.nextStep();
