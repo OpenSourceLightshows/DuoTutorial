@@ -3,9 +3,9 @@ import VortexLib from './VortexLib.js';
 import Lightshow from './Lightshow.js';
 
 // Welcome message for the tutorial
-const welcomeTitle = "<h1>Welcome to Duo Tutorial</h1>";
+const welcomeTitle = "<h1>Duo Tutorial</h1>";
 const welcomeBlurb = `
-  <p>Welcome to the Duo Tutorial! Follow along to learn how to interact with the Vortex Engine and create mesmerizing lightshows.</p>
+  <p>Welcome to the Duo Tutorial! Follow along to learn how to interact with your Duo and make use of it's menus</p>
 `;
 
 // Initialize the VortexLib WebAssembly module

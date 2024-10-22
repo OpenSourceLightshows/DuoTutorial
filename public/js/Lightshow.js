@@ -14,10 +14,10 @@ export default class Lightshow {
     this.ctx = this.canvas.getContext('2d');
     this.dotSize = 25;
     this.blurFac = 5;
-    this.circleRadius = 400;
+    this.radius = 300;
     this.tickRate = 3;
     this.trailSize = 100;
-    this.spread = 15;
+    this.spread = 50;
     this.angle = 0;
     this.currentShape = 'circle'; // Default shape
     this.direction = 1;
@@ -198,7 +198,7 @@ export default class Lightshow {
   feedCirclePoints() {
     const centerX = (this.canvas.width / 2);
     const centerY = this.canvas.height / 2;
-    let baseRadius = Math.min(centerX, centerY) - (500 - parseInt(this.circleRadius));
+    let baseRadius = Math.min(centerX, centerY) - (500 - parseInt(this.radius));
 
     for (let i = 0; i < this.tickRate; i++) {
       const leds = this.vortexLib.Tick();
@@ -231,10 +231,10 @@ export default class Lightshow {
   feedHeartPoints() {
     const centerX = (this.canvas.width / 2);
     const centerY = this.canvas.height / 2;
-    const scale = (this.circleRadius / 20) + 1;
+    const scale = (this.radius / 20) + 1;
 
     for (let i = 0; i < this.tickRate; i++) {
-      const leds = this.vortexLib.RunTick(this.vortex);
+      const leds = this.vortexLib.Tick();
       if (!leds) {
         continue;
       }
@@ -265,10 +265,10 @@ export default class Lightshow {
   feedBoxPoints() {
     const centerX = (this.canvas.width / 2);
     const centerY = (this.canvas.height / 2);
-    const baseBoxSize = Math.min(centerX, centerY) - (500 - parseInt(this.circleRadius));  // Start with a reasonable base size for visibility
+    const baseBoxSize = Math.min(centerX, centerY) - (500 - parseInt(this.radius));  // Start with a reasonable base size for visibility
 
     for (let i = 0; i < this.tickRate; i++) {
-      const leds = this.vortexLib.RunTick(this.vortex);
+      const leds = this.vortexLib.Tick();
       if (!leds) {
         continue;
       }
@@ -313,10 +313,10 @@ export default class Lightshow {
   feedFigure8Points() {
     const centerX = (this.canvas.width / 2);
     const centerY = this.canvas.height / 2;
-    let baseRadius = Math.min(centerX, centerY) - (500 - parseInt(this.circleRadius));
+    let baseRadius = Math.min(centerX, centerY) - (500 - parseInt(this.radius));
 
     for (let i = 0; i < this.tickRate; i++) {
-      const leds = this.vortexLib.RunTick(this.vortex);
+      const leds = this.vortexLib.Tick();
       if (!leds) {
         continue;
       }
