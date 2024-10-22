@@ -13,23 +13,6 @@ canvas {
   border: 1px solid black;
 }
 
-.modal {
-  position: absolute;
-  top: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 80%;
-  max-width: 600px;
-  background-color: white;
-  border: 1px solid #ddd;
-  padding: 20px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-}
-
-.modal-content {
-  text-align: left;
-}
-
 button {
   margin-top: 10px;
   padding: 10px 20px;
@@ -43,7 +26,6 @@ label {
 
 /* Modal Styles */
 .modal {
-  display: none; /* Hidden by default */
   position: fixed;
   z-index: 1000;
   left: 0;
@@ -110,3 +92,102 @@ label {
   text-decoration: none;
   cursor: pointer;
 }
+
+
+/* Responsive Tutorial Overlay */
+.tutorial-overlay {
+  position: fixed;
+  z-index: 1000;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.tutorial-content {
+  background-color: #1e1e1e;
+  padding: 30px;
+  border-radius: 10px;
+  color: #fff;
+  text-align: center;
+  max-width: 400px;
+  width: 80%;
+  margin: 20px;
+}
+
+.tutorial-step-title {
+  font-size: 22px;
+  margin-bottom: 15px;
+}
+
+.tutorial-actions {
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.tutorial-actions button {
+  padding: 10px 20px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s;
+}
+
+.tutorial-actions .btn-prev {
+  background-color: #6c757d;
+}
+
+.tutorial-actions .btn-prev:hover {
+  background-color: #5a6268;
+}
+
+.tutorial-actions .btn-next {
+  background-color: #28a745;
+  color: #fff;
+}
+
+.tutorial-actions .btn-next:hover {
+  background-color: #218838;
+}
+
+.tutorial-actions .btn-skip {
+  background-color: transparent;
+  color: #f5f5f5;
+  border: 1px solid #fff;
+}
+
+.tutorial-actions .btn-skip:hover {
+  color: #d9534f;
+  border-color: #d9534f;
+}
+
+/* Media query for mobile responsiveness */
+@media (max-width: 768px) {
+  .tutorial-content {
+    width: 90%;
+    padding: 20px;
+  }
+
+  .tutorial-step-title {
+    font-size: 18px;
+  }
+
+  .tutorial-actions {
+    flex-direction: column;
+  }
+
+  .tutorial-actions button {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  .tutorial-actions button:last-child {
+    margin-bottom: 0;
+  }
+}
+

@@ -15,8 +15,8 @@ export default class Lightshow {
     this.dotSize = 25;
     this.blurFac = 5;
     this.radius = 300;
-    this.tickRate = 3;
-    this.trailSize = 100;
+    this.tickRate = 10;
+    this.trailSize = 1;
     this.spread = 50;
     this.angle = 0;
     this.currentShape = 'circle'; // Default shape
@@ -140,6 +140,9 @@ export default class Lightshow {
 
   draw() {
     switch (this.currentShape) {
+      case 'dot':
+        this.feedDotPoints();
+        break;
       case 'circle':
         this.feedCirclePoints();
         break;

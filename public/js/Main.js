@@ -1,6 +1,7 @@
 /* Main.js for Duo Tutorial */
 import VortexLib from './VortexLib.js';
 import Lightshow from './Lightshow.js';
+import Tutorial from './Tutorial.js';
 
 // Welcome message for the tutorial
 const welcomeTitle = "<h1>Duo Tutorial</h1>";
@@ -42,8 +43,11 @@ VortexLib().then(vortexLib => {
     lightshow.angle = 0; // Reset angle after changing shape
   });
 
+  // Initialize the tutorial and pass vortexLib and lightshow instances
+  const tutorial = new Tutorial(vortexLib, lightshow);
+
   // Check if the welcome modal should be shown
-  const showWelcome = localStorage.getItem('showWelcome') !== 'false';
+  const showWelcome = true;
 
   if (showWelcome) {
     const welcomeModal = document.createElement('div');
