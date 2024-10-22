@@ -38,7 +38,7 @@ jobs:
         fetch-depth: 0
         repository: 'StoneOrbits/VortexEngine'
         path: 'VortexEngine'
-        ref: 'duo'
+        ref: 'daniel/duo-tutorial'
 
     # Install Emscripten dependencies
     - name: Install dependencies
