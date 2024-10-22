@@ -9,47 +9,128 @@ body, html {
   width: 100%;
   display: flex;
   flex-direction: column;
-  overflow: hidden; /* Prevents overflow in case of larger content */
+  overflow: hidden; /* Prevent overflow */
 }
 
-canvas {
-  border: 1px solid black;
+#lightshowCanvas {
   width: 100%;
-  display: block; /* Removes extra space below the canvas */
-  background-color: black; /* Background for visualization */
-  position: relative;
-  height: 75vh; /* Default height for wide screens */
+  height: 75vh; /* Default for large screens */
+  border: 1px solid black;
+  display: block;
+  background-color: black; /* For visibility */
 }
 
-/* Tutorial overlay positioned at the bottom */
+/* =======================================
+   Tutorial Overlay at the Bottom
+   ======================================= */
+
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Roboto:wght@400&display=swap');
+
 .tutorial-overlay {
-  position: absolute; /* Positioned within the viewport */
+  position: fixed;
   bottom: 0;
   left: 0;
   width: 100%;
-  height: 25vh; /* Default height for wide screens */
-  background-color: rgba(30, 30, 30, 0.95); /* Semi-transparent background */
+  height: 25vh;
+  background-color: rgba(30, 30, 30, 0.95);
   z-index: 1000; /* Ensure it stays on top */
-  padding: 20px;
+  padding: 30px;
   box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+}
+
+.tutorial-content {
+  max-width: 600px;
+  width: 100%;
+  text-align: center;
+  color: #fff;
+}
+
+.tutorial-step-title {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 32px;
+  margin-bottom: 25px;
+  margin-top: 0;
+}
+
+.tutorial-step-content {
+  font-family: 'Roboto', sans-serif;
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+/* Green button for simulating device clicks */
+.device-button {
+  background-color: #28a745; /* Green color */
+  color: white;
+  padding: 15px 30px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 18px;
+  user-select: none;
+}
+
+.device-button:hover {
+  background-color: #218838; /* Darker green on hover */
+}
+
+/* Grayed-out Next button when disabled */
+.tutorial-actions .btn-next:disabled {
+  background-color: gray;
+  cursor: not-allowed;
 }
 
 /* =======================================
-   Responsive Layout for Narrow Screens
+   Tutorial Actions (Prev, Next, Skip)
    ======================================= */
 
-@media (max-width: 768px) {
-  canvas {
-    height: 60vh; /* Reduced height for smaller screens */
-  }
+.tutorial-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 30px;
+}
 
-  .tutorial-overlay {
-    height: 40vh; /* Increased height for tutorial content on smaller screens */
-  }
+.tutorial-actions button {
+  padding: 10px 20px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s;
+}
+
+.tutorial-actions .btn-prev {
+  background-color: #6c757d;
+}
+
+.tutorial-actions .btn-prev:hover {
+  background-color: #5a6268;
+}
+
+.tutorial-actions .btn-next {
+  background-color: #28a745;
+  color: #fff;
+}
+
+.tutorial-actions .btn-next:hover {
+  background-color: #218838;
+}
+
+.tutorial-actions .btn-skip {
+  background-color: transparent;
+  color: #f5f5f5;
+  border: 1px solid #fff;
+}
+
+.tutorial-actions .btn-skip:hover {
+  color: #d9534f;
+  border-color: #d9534f;
 }
 
 /* =======================================
-   Modal Styles
+   Modal Styles (Welcome Modal)
    ======================================= */
 
 .modal {
@@ -67,18 +148,18 @@ canvas {
 
 .modal-content {
   background-color: #181a1b;
-  margin: 10% auto; /* Centering the modal */
+  margin: 10% auto;
   padding: 30px;
   border: 1px solid #3e4446;
   border-radius: 5px;
-  width: 40%; /* Fixed width */
-  color: #d8d4cf; /* Text color */
+  width: 40%;
+  color: #d8d4cf;
 }
 
 .modal-content input[type="text"] {
   width: 100%;
   padding: 10px;
-  margin: 10px 0px;
+  margin: 10px 0;
   border: 1px solid #454545;
   border-radius: 4px;
   background-color: #292c2e;
@@ -121,84 +202,98 @@ canvas {
 }
 
 /* =======================================
-   Tutorial Content Styling
+   Left-Side Pop-Out Tutorial Tree/Index
    ======================================= */
 
-.tutorial-content {
-  max-width: 600px;
-  margin: 0 auto; /* Center the tutorial content */
-  text-align: center;
-  color: #fff;
+#tutorialTree {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 250px;
+  height: 100%;
+  background-color: rgba(51, 51, 51, 0.95); /* Semi-transparent background */
+  color: white;
+  padding: 20px;
+  overflow-y: auto;
+  z-index: 10000; /* Ensure it's above everything */
+  transform: translateX(-100%); /* Hidden by default (slides out of view) */
+  transition: transform 0.3s ease; /* Smooth slide in/out */
 }
 
-.tutorial-step-title {
-  font-size: 22px;
-  margin-bottom: 15px;
+#tutorialTree.open {
+  transform: translateX(0); /* Slide in when open */
 }
 
-.tutorial-step-content {
-  font-size: 16px;
-  margin-bottom: 20px;
+/* Tree nodes */
+.nav-tree {
+  list-style-type: none;
+  padding-left: 0;
 }
 
-/* =======================================
-   Tutorial Actions (Prev, Next, Skip)
-   ======================================= */
-
-.tutorial-actions {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 20px;
+.nav-tree .sub-tree {
+  padding-left: 20px;
+  display: none; /* Hidden by default */
 }
 
-.tutorial-actions button {
-  padding: 10px 20px;
-  border-radius: 5px;
-  border: none;
+.nav-tree .tree-node {
   cursor: pointer;
-  font-size: 16px;
-  transition: background-color 0.3s;
+  padding: 10px 5px;
+  border-bottom: 1px solid #444;
 }
 
-.tutorial-actions .btn-prev {
-  background-color: #6c757d;
+.nav-tree .tree-node:hover {
+  background-color: #555;
 }
 
-.tutorial-actions .btn-prev:hover {
-  background-color: #5a6268;
-}
-
-.tutorial-actions .btn-next {
+.nav-tree .active {
   background-color: #28a745;
-  color: #fff;
-}
-
-.tutorial-actions .btn-next:hover {
-  background-color: #218838;
-}
-
-.tutorial-actions .btn-skip {
-  background-color: transparent;
-  color: #f5f5f5;
-  border: 1px solid #fff;
-}
-
-.tutorial-actions .btn-skip:hover {
-  color: #d9534f;
-  border-color: #d9534f;
 }
 
 /* =======================================
-   Responsive Layout for Smaller Screens
+   Pull Tab for the Tree (Hamburger Button)
+   ======================================= */
+
+#pullTab {
+  position: fixed;
+  top: 50%;
+  left: 0;
+  z-index: 10001;
+  background-color: #333;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 0 10px 10px 0;
+  cursor: pointer;
+  font-size: 18px;
+  transform: translateY(-50%); /* Center vertically */
+}
+
+/* =======================================
+   Responsive Layout for Mobile
    ======================================= */
 
 @media (max-width: 768px) {
-  .tutorial-content {
-    width: 90%;
+  /* Make the tree take full width on mobile */
+  #tutorialTree {
+    width: 80%;
+    height: auto;
+    transform: translateX(-100%);
   }
 
-  .tutorial-step-title {
-    font-size: 18px;
+  #pullTab {
+    font-size: 16px; /* Smaller pull tab on mobile */
+  }
+
+  /* Adjust canvas and tutorial overlay heights for mobile */
+  canvas#lightshowCanvas {
+    height: 60vh; /* Reduced height for smaller screens */
+  }
+
+  .tutorial-overlay {
+    height: 40vh; /* Increased height for tutorial content on smaller screens */
+  }
+
+  .tutorial-content {
+    width: 90%;
   }
 
   .tutorial-actions {

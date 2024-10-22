@@ -13,10 +13,10 @@ export default class Lightshow {
     this.canvas.height = window.innerHeight;
     this.ctx = this.canvas.getContext('2d');
     this.dotSize = 25;
-    this.blurFac = 5;
+    this.blurFac = 3;
     this.radius = ((this.canvas.width > this.canvas.height) ? this.canvas.height : this.canvas.width) / 3;
     this.tickRate = 20;
-    this.trailSize = 10;
+    this.trailSize = 60;
     this.spread = 50;
     this.angle = 0;
     this.currentShape = 'circle'; // Default shape
@@ -34,9 +34,18 @@ export default class Lightshow {
     this.modeData = modeData;
     this.applyModeData();
     this.targetLeds = [0];
+    this.enabled = false;
 
     // Initialize histories for each LED
     this.updateHistories();
+  }
+
+  toggleEnabled() {
+    this.enabled = !this.enabled;
+  }
+
+  setEnabled(enable) {
+    this.enabled = enable;
   }
 
   setLedCount(count) {
@@ -140,26 +149,31 @@ export default class Lightshow {
   }
 
   draw() {
-    switch (this.currentShape) {
-      case 'dot':
-        this.feedDotPoints();
-        break;
-      case 'circle':
-        this.feedCirclePoints();
-        break;
-      case 'figure8':
-        this.feedFigure8Points();
-        break;
-      case 'heart':
-        this.feedHeartPoints();
-        break;
-      case 'box':
-        this.feedBoxPoints();
-        break;
-      default:
-        console.warn('Unknown shape:', this.currentShape);
-        return;
+    if (this.enabled) {
+      switch (this.currentShape) {
+        case 'dot':
+          this.feedDotPoints();
+          break;
+        case 'circle':
+          this.feedCirclePoints();
+          break;
+        case 'figure8':
+          this.feedFigure8Points();
+          break;
+        case 'heart':
+          this.feedHeartPoints();
+          break;
+        case 'box':
+          this.feedBoxPoints();
+          break;
+        default:
+          console.warn('Unknown shape:', this.currentShape);
+          return;
+      }
+    } else {
+      this.histories = [];
     }
+
     this.drawHistories();
   }
 
