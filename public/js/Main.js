@@ -10,6 +10,9 @@ const welcomeBlurb = `
 
 // Initialize the VortexLib WebAssembly module
 VortexLib().then(vortexLib => {
+  // Initialize the Vortex engine (since it's static in the WASM version)
+  vortexLib.Init();
+
   const canvas = document.getElementById('lightshowCanvas');
   
   // Create a new instance of the Lightshow

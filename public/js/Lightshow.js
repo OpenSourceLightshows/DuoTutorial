@@ -22,10 +22,9 @@ export default class Lightshow {
     this.currentShape = 'circle'; // Default shape
     this.direction = 1;
     this.vortexLib = vortexLib;
-    this.vortex = new vortexLib.Vortex();
-    this.vortex.init();
-    this.vortex.setLedCount(1);
-    this.vortexLib.RunTick(this.vortex);
+    this.vortexLib.Vortex.init();
+    this.vortexLib.Vortex.setLedCount(1);
+    this.vortexLib.Tick();
     this.animationFrameId = null;
     this.configurableSectionCount = configurableSectionCount;
     this.sectionWidth = this.canvas.width / this.configurableSectionCount;
@@ -41,7 +40,7 @@ export default class Lightshow {
   }
 
   setLedCount(count) {
-    this.vortex.setLedCount(count);
+    this.vortexLib.Vortex.setLedCount(count);
     this.updateHistories();
   }
 
@@ -80,7 +79,7 @@ export default class Lightshow {
       }
     });
     // grab the 'preview' mode for the current mode (randomizer)
-    let demoMode = this.vortex.engine().modes().curMode();
+    let demoMode = this.vortexLib.Modes.curMode();
     if (!demoMode) {
       return;
     }
@@ -94,7 +93,7 @@ export default class Lightshow {
     for (let i = 0; i < this.modeData.args.length; ++i) {
       args.addArgs(this.modeData.args[i]);
     }
-    this.vortex.setPatternArgs(this.ledCount(), args, false);
+    this.vortexLib.Vortex.setPatternArgs(this.ledCount(), args, false);
     // re-initialize the demo mode so it takes the new args into consideration
     demoMode.init();
   }
@@ -127,7 +126,7 @@ export default class Lightshow {
   }
 
   ledCount() {
-    return this.vortex.engine().leds().ledCount();
+    return this.vortexLib.LedPos.LED_COUNT;
   }
 
   // function to set the shape
@@ -202,7 +201,7 @@ export default class Lightshow {
     let baseRadius = Math.min(centerX, centerY) - (500 - parseInt(this.circleRadius));
 
     for (let i = 0; i < this.tickRate; i++) {
-      const leds = this.vortexLib.RunTick(this.vortex);
+      const leds = this.vortexLib.Tick();
       if (!leds) {
         continue;
       }
@@ -361,7 +360,7 @@ export default class Lightshow {
 
   // get the pattern
   getPattern() {
-    const demoMode = this.vortex.engine().modes().curMode();
+    const demoMode = this.vortexLib.Vortex.Modes.curMode();
     return demoMode.getPattern(0);
   }
 
@@ -370,7 +369,7 @@ export default class Lightshow {
     // the selected dropdown pattern
     const selectedPattern = this.vortexLib.PatternID.values[patternIDValue];
     // grab the 'preview' mode for the current mode (randomizer)
-    let demoMode = this.vortex.engine().modes().curMode();
+    let demoMode = this.vortexLib.Vortex.Modes.curMode();
     targetLeds.forEach(ledIndex => {
       // set the pattern of the demo mode to the selected dropdown pattern on all LED positions
       // with null args and null colorset (so they are defaulted and won't change)
@@ -379,12 +378,12 @@ export default class Lightshow {
     // re-initialize the demo mode so it takes the new args into consideration
     demoMode.init();
     // save
-    this.vortex.engine().modes().saveCurMode();
+    this.vortexLib.Vortex.Modes.saveCurMode();
   }
 
   // get colorset
-  getColorset(led = this.vortex.engine().leds().ledAny()) {
-    const demoMode = this.vortex.engine().modes().curMode();
+  getColorset(led = this.vortexLib.Vortex.Leds.LED_ANY) {
+    const demoMode = this.vortexLib.Vortex.Modes.curMode();
     if (!demoMode) {
       return new this.vortexLib.Colorset();
     }
@@ -394,7 +393,7 @@ export default class Lightshow {
   // update colorset
   setColorset(colorset, targetLeds = this.targetLeds) {
     // grab the 'preview' mode for the current mode (randomizer)
-    let demoMode = this.vortex.engine().modes().curMode();
+    let demoMode = this.vortexLib.Vortex.Modes.curMode();
     if (!demoMode) {
       return;
     }
@@ -405,7 +404,7 @@ export default class Lightshow {
     // re-initialize the demo mode because num colors may have changed
     demoMode.init();
     // save
-    this.vortex.engine().modes().saveCurMode();
+    //this.vortexLib.Vortex.Modes.saveCurMode();
   }
 
   // add a color to the colorset
@@ -440,60 +439,5 @@ export default class Lightshow {
     targetLeds.forEach(ledIndex => {
       this.setColorset(set, [ledIndex]);
     });
-  }
-
-  randomizeColorset(targetLeds = this.targetLeds) {
-    this.vortex.openRandomizer(true);
-    let numCmds = 3;
-    if (targetLeds.length > 0) {
-      this.vortex.clearMenuTargetLeds();
-      targetLeds.forEach(led => {
-        // by adding or setting our own target leds it will skip led selection in the menu
-        this.vortex.addMenuTargetLeds(led);
-      });
-    } else {
-      // otherwise input long click to select all leds
-      this.vortex.longClick(0);
-      numCmds++;
-    }
-    // select colorset
-    this.vortex.longClick(0);
-    // randomize
-    this.vortex.shortClick(0);
-    // save
-    this.vortex.longClick(0);
-    // need to run 1 tick per command
-    for (let i = 0; i < numCmds; ++i) {
-      this.vortexLib.RunTick(this.vortex);
-    }
-    this.vortex.engine().modes().saveCurMode();
-  }
-
-  randomizePattern(targetLeds = this.targetLeds) {
-    this.vortex.openRandomizer(true);
-    let numCmds = 4;
-    if (targetLeds.length > 0) {
-      this.vortex.clearMenuTargetLeds();
-      targetLeds.forEach(led => {
-        // by adding or setting our own target leds it will skip led selection in the menu
-        this.vortex.addMenuTargetLeds(led);
-      });
-    } else {
-      // otherwise input long click to select all leds
-      this.vortex.longClick(0);
-      numCmds++;
-    }
-    // select pattern
-    this.vortex.shortClick(0);
-    this.vortex.longClick(0);
-    // randomize
-    this.vortex.shortClick(0);
-    // save
-    this.vortex.longClick(0);
-    // need to run 1 tick per command
-    for (let i = 0; i < numCmds; ++i) {
-      this.vortexLib.RunTick(this.vortex);
-    }
-    this.vortex.engine().modes().saveCurMode();
   }
 }
