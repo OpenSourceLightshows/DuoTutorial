@@ -17,9 +17,8 @@ body, html {
 
 #lightshowCanvas {
   width: 100%;
-  height: 65vh; /* Default for large screens */
+  height: 65vh;
   border: 1px solid black;
-  display: block;
   background-color: black; /* For visibility */
 }
 
@@ -28,9 +27,6 @@ body, html {
    ======================================= */
 
 .tutorial-overlay {
-  position: fixed;
-  bottom: 0;
-  left: 0;
   width: 100%;
   height: 35vh;
   background-color: rgba(30, 30, 30, 0.95);
@@ -365,7 +361,7 @@ body, html {
 @media (max-width: 768px) {
   /* Adjust canvas and tutorial overlay heights for mobile */
   canvas#lightshowCanvas {
-    height: 55vh; /* Reduced height for smaller screens */
+    width: 100%;
   }
 
   .tutorial-overlay {

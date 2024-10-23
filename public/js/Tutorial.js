@@ -1,13 +1,14 @@
 import Notification from './Notification.js';
 
 export default class Tutorial {
-  constructor(vortexLib, lightshow) {
+  constructor(vortexLib) {
     this.vortexLib = vortexLib;
-    this.lightshow = lightshow;
-    this.currentStep = 0,
+    //this.lightshow = lightshow;
+    this.currentStep = 4,
     this.isActionCompleted = false; // Track if action is completed for each step
     this.pressStartTime = null; // Track press start time
     this.holdTimeouts = []; // To store timeouts for clearing on early release
+    //this.lightshow.to5gleEnabled();
 
     // Step-specific data (e.g., a counter for step 1)
     this.stepData = {
@@ -83,9 +84,8 @@ export default class Tutorial {
             Notification.failure("That's a long click, that turns on the Duo and toggles Conjure Mode");
             return;
           }
-
           Notification.success(`Great! The Duo is now running it's first mode`);
-          this.lightshow.toggleEnabled();
+          //this.lightshow.toggleEnabled();
           this.nextStep();
         }
       },
@@ -98,12 +98,12 @@ export default class Tutorial {
           if (type === 'down') {
             // Call an action at 500ms
             const hold500ms = setTimeout(() => {
-              this.lightshow.setEnabled(false);
+              //this.lightshow.setEnabled(false);
             }, 500);
 
             // Call another action at 1250ms
             const hold1250ms = setTimeout(() => {
-              this.lightshow.setEnabled(true);
+              //this.lightshow.setEnabled(true);
             }, 1250);
 
             // Store timeouts to clear them on early release
@@ -138,9 +138,7 @@ export default class Tutorial {
             Notification.failure("You are holding the button for too long, use fast clicks to cycle");
             return;
           }
-          if (!this.stepData.clickCounter) {
-            this.lightshow.toggleEnabled();
-          } else {
+          if (this.stepData.clickCounter) {
             this.vortexLib.Vortex.shortClick(0);
           }
           this.stepData.clickCounter++;
@@ -161,12 +159,12 @@ export default class Tutorial {
           if (type === 'down') {
             // Call an action at 500ms
             const hold500ms = setTimeout(() => {
-              this.lightshow.setEnabled(false);
+              //this.lightshow.setEnabled(false);
             }, 500);
 
             // Call another action at 1250ms
             const hold1250ms = setTimeout(() => {
-              this.lightshow.setEnabled(true);
+              //this.lightshow.setEnabled(true);
               this.vortexLib.Vortex.menuEnterClick(0);
             }, 1250);
 
@@ -187,7 +185,7 @@ export default class Tutorial {
                 Notification.failure("You need to hold the button for longer");
               }
 
-              this.lightshow.setEnabled(true);
+              //this.lightshow.setEnabled(true);
             } else {
               Notification.success("Success, you entered the menus.");
               this.nextStep(); // Move to the next step if held correctly
@@ -237,7 +235,7 @@ export default class Tutorial {
             Notification.failure("That was a short click, use a long click to enter a menu");
             return;
           }
-          Notification.success("Congratulations, you opened the mode randomizer");
+          Notification.success("You opened the mode randomizer");
           this.vortexLib.Vortex.longClick(0);
           this.nextStep();
         }
@@ -291,8 +289,8 @@ export default class Tutorial {
       },
       // ================================================================================
       {
-        title: "Select a Random Mode",
-        content: "Continue rolling new random modes, when you're happy with one <b>long click</b> to save it",
+        title: "Understand Where You Are",
+        content: "After using a menu to edit a mode the changes are saved and the menu is closed. <b>Short click</b> to cycle through modes to see you're back on the main modes list",
         buttonTime: 0.25,
         prepare: () => {
         },
@@ -301,19 +299,25 @@ export default class Tutorial {
             return;
           }
           if (dur < 250) {
-            Notification.message("Randomized a new mode");
+            this.stepData.clickCounter++;
             this.vortexLib.Vortex.shortClick(0);
+            if (this.stepData.clickCounter > 3) {
+              Notification.success(``);
+            } else {
+              Notification.message(`Cycled to mode ${(this.stepData.clickCounter) % 6}`);
+            }
           } else {
             this.vortexLib.Vortex.longClick(0);
             Notification.success("Good, you picked the leds to be targeted by the menu");
             this.nextStep();
           }
-
+          if (this.vortexLib.Vortex.curModeIndex() < 4) {
+          } else {
+            this.nextStep();
+            Notification.success(`You successfully cycled all the modes, you're back at the first mode`);
+          }
         }
       },
-
-
-
     ];
 
     this.init();
@@ -432,10 +436,10 @@ export default class Tutorial {
   nextStep() {
     if (this.currentStep < this.steps.length - 1) {
       this.currentStep++;
-      // run init
-      if (typeof this.steps[this.currentStep].prepare === 'function') {
-        this.steps[this.currentStep].prepare();
-      }
+      // only prepare first one?
+      //if (typeof this.steps[this.currentStep].prepare === 'function') {
+      //  this.steps[this.currentStep].prepare();
+      //}
       // update the tutorial step
       this.updateTutorialStep(this.currentStep);
       // reset this

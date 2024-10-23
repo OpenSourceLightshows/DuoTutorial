@@ -17,9 +17,11 @@ VortexLib().then(vortexLib => {
   vortexLib.Init();
 
   const canvas = document.getElementById('lightshowCanvas');
+  const tutorial = new Tutorial(vortexLib);
   
   // Create a new instance of the Lightshow
   let lightshow = new Lightshow(vortexLib, canvas);
+    lightshow.toggleEnabled();
 
   // Start the lightshow
   lightshow.start();
@@ -45,8 +47,6 @@ VortexLib().then(vortexLib => {
     lightshow.angle = 0; // Reset angle after changing shape
   });
 
-  // Initialize the tutorial and pass vortexLib and lightshow instances
-  const tutorial = new Tutorial(vortexLib, lightshow);
   //const tutorialTree = new TutorialTree(vortexLib);
 
   // Check if the welcome modal should be shown

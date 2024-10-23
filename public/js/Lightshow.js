@@ -9,15 +9,16 @@ export default class Lightshow {
     if (!this.canvas) {
       throw new Error(`Canvas with ID ${canvasId} not found`);
     }
-    this.canvas.width = window.innerWidth;
-    this.canvas.height = window.innerHeight;
     this.ctx = this.canvas.getContext('2d');
-    this.dotSize = 25;
+    this.dotSize = 15;
     this.blurFac = 3;
-    this.radius = ((this.canvas.width > this.canvas.height) ? this.canvas.height : this.canvas.width) / 4;
+    const rect = this.canvas.getBoundingClientRect();
+    this.canvas.width = rect.width;  // Set the canvas internal width to match the displayed size
+    this.canvas.height = rect.height;  // Set the canvas internal height to match the displayed size
+    this.radius = ((this.canvas.width > this.canvas.height) ? this.canvas.height : this.canvas.width) / 3;
     this.tickRate = 20;
     this.trailSize = 60;
-    this.spread = 50;
+    this.spread = 25;
     this.angle = 0;
     this.currentShape = 'circle'; // Default shape
     this.direction = 1;
