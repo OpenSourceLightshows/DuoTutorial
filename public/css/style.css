@@ -43,7 +43,7 @@ body, html {
 }
 
 .tutorial-content {
-  max-width: 600px;
+  max-width: 800px;
   width: 100%;
   text-align: center;
   color: #fff;
@@ -210,7 +210,7 @@ body, html {
   top: 50%;
   transform: translate(-50%, -50%); /* Center the modal both horizontally and vertically */
   width: 90%; /* Make the modal take up 90% of the screen width on smaller devices */
-  max-width: 400px; /* Set a maximum width so it doesn't grow too large */
+  max-width: 600px; /* Set a maximum width so it doesn't grow too large */
   height: auto; /* Let the height adjust based on the content */
   max-height: 90vh; /* Set a maximum height for the modal to avoid overflow */
   background-color: #181a1b;
@@ -226,6 +226,10 @@ body, html {
   width: 100%; /* Ensure content takes up full width */
   padding: 10px; /* Add some padding for the content */
   box-sizing: border-box; /* Ensure padding doesn't affect width */
+}
+
+.modal-checkbox-container {
+  text-align: center;
 }
 
 .modal-title {
@@ -410,7 +414,7 @@ body, html {
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   font-family: 'Roboto', sans-serif;
-  font-size: 16px;
+  font-size: 20px;
   line-height: 1.5;
   white-space: normal;
   word-wrap: break-word;

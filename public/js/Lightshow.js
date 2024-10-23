@@ -14,7 +14,7 @@ export default class Lightshow {
     this.ctx = this.canvas.getContext('2d');
     this.dotSize = 25;
     this.blurFac = 3;
-    this.radius = ((this.canvas.width > this.canvas.height) ? this.canvas.height : this.canvas.width) / 3;
+    this.radius = ((this.canvas.width > this.canvas.height) ? this.canvas.height : this.canvas.width) / 4;
     this.tickRate = 20;
     this.trailSize = 60;
     this.spread = 50;

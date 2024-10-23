@@ -5,9 +5,10 @@ import Tutorial from './Tutorial.js';
 import TutorialTree from './TutorialTree.js';
 
 // Welcome message for the tutorial
-const welcomeTitle = "<h1>Duo Tutorial</h1>";
+const welcomeTitle = "<h2>Welcome to the Interactive Duo Tutorial!</h2>";
 const welcomeBlurb = `
-  <p>Welcome to the Duo Tutorial! Follow along to learn how to interact with your Duo and make use of it's menus</p>
+  This is a guide designed to introduce the Duo and Vortex Engine, it features a virtual Duo that can be controlled by clicking a button.<br><br>
+  The goal is to demonstrate how to use the Duo and navigate it's menus. Follow along with your own Duo and learn how to make the most of it</p>
 `;
 
 // Initialize the VortexLib WebAssembly module
@@ -60,7 +61,7 @@ VortexLib().then(vortexLib => {
         <div class="modal-content">
           ${welcomeTitle}
           ${welcomeBlurb}
-          <label><input type="checkbox" id="doNotShowAgain"> Do not show this again</label>
+          <div class="modal-checkbox-container"><label><input type="checkbox" id="doNotShowAgain"> Do not show this again</label></div>
           <button id="closeModal">Begin</button>
         </div>
       </div>

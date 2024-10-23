@@ -85,7 +85,7 @@ class Notification {
     Notification.createNotification(message, "success", duration);
   }
 
-  static failure(message, duration = 3000) {
+  static failure(message, duration = 4000) {
     Notification.createNotification(message, "failure", duration);
   }
 
