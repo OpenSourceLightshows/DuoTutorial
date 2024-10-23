@@ -16,6 +16,7 @@ export default class Tutorial {
     };
 
     this.steps = [
+      // ================================================================================
       {
         title: "Short Clicks",
         content: "First is basic input, perform a <b>Short Click</b> by pressing the button for less than 0.25 seconds",
@@ -31,6 +32,7 @@ export default class Tutorial {
           this.nextStep();
         }
       },
+      // ================================================================================
       {
         title: "Long Clicks",
         content: "Next, try a <b>Long Click</b> by pressing the button for at least 0.25 seconds",
@@ -48,6 +50,7 @@ export default class Tutorial {
           this.nextStep();
         }
       },
+      // ================================================================================
       {
         title: "Holds",
         content: "The last way to press the button is by <b>holding</b> for an extended duration. " +
@@ -65,6 +68,7 @@ export default class Tutorial {
           this.nextStep();
         }
       },
+      // ================================================================================
       {
         title: "Turning On",
         content: () => `Start by <b>short clicking</b> the button to turn on the Duo`,
@@ -82,6 +86,7 @@ export default class Tutorial {
           this.nextStep();
         }
       },
+      // ================================================================================
       {
         title: "Turning Off",
         content: () => `You can turn the Duo <b>off</b> by holding for at least half a second up to 1.25 seconds`,
@@ -103,6 +108,7 @@ export default class Tutorial {
           this.nextStep();
         }
       },
+      // ================================================================================
       {
         title: "Cycling Modes",
         content: () => `Turn the Duo back on and <b>short click</b> to cycle through the available modes. ${(this.stepData.clickCounter > 0) ? `Current Mode: ${this.stepData.clickCounter} / 5` : ``}`,
@@ -128,6 +134,7 @@ export default class Tutorial {
           }
         }
       },
+      // ================================================================================
       {
         title: "Enter Menus",
         content: "To enter the Menus <b>hold</b> the button, past the <b>off</b> option, till the LED flashes white (1.25 seconds)",
@@ -167,6 +174,7 @@ export default class Tutorial {
           }
         }
       },
+      // ================================================================================
       {
         title: "The Menus",
         content: () => `Click to cycle through the menus.<br>Current Menu: ${this.stepData.curMenu}`,
@@ -195,6 +203,7 @@ export default class Tutorial {
           }
         }
       },
+      // ================================================================================
       {
         title: "Enter the Randomizer",
         content: "Next, <b>Long click</b> to enter the Randomizer Menu",
