@@ -1,13 +1,16 @@
 import Notification from './Notification.js';
+import TutorialTree from './TutorialTree.js';
 
 export default class Tutorial {
   constructor(vortexLib, lightshow) {
     this.vortexLib = vortexLib;
     this.lightshow = lightshow;
-    this.currentStep = 0,
+    this.currentStep = 0;
     this.isActionCompleted = false; // Track if action is completed for each step
     this.pressStartTime = null; // Track press start time
     this.holdTimeouts = []; // To store timeouts for clearing on early release
+    this.tutorialTree = new TutorialTree(this.vortexLib);
+    this.buttonDown = false;
 
     // Step-specific data (e.g., a counter for step 1)
     this.stepData = {
@@ -16,65 +19,65 @@ export default class Tutorial {
     };
 
     this.steps = [
-      // ================================================================================
-      {
-        title: "Short Clicks",
-        content: "First is basic input, a <b>Short Click</b> is just a normal click. Perform a <b>Short Click</b> on the button below",
-        prepare: () => {
-          // run stuff to prepare the step if necessary
-        },
-        action: (type, dur) => {
-          if (type != 'up') {
-            return;
-          }
-          if (dur >= 250) {
-            Notification.failure("That was a long click, don't hold the button for too long (250 milliseconds)");
-            return;
-          }
-          Notification.success("Good, a short click is for cycling through options");
-          this.nextStep();
-        }
-      },
-      // ================================================================================
-      {
-        title: "Long Clicks",
-        content: "Next, try a <b>Long Click</b> by holding the button for about 1 second",
-        buttonTime: 0.25,
-        action: (type, dur) => {
-          if (type != 'up') {
-            return;
-          }
-          if (dur < 250) {
-            Notification.failure("That was a short click, make sure to hold button for 0.25 seconds");
-            return;
-          }
-          Notification.success("Good! That was a long click");
-          this.buttonTime = 1.5;
-          this.nextStep();
-        }
-      },
-      // ================================================================================
-      {
-        title: "Holds",
-        content: "The last way to press the button is by <b>holding</b> for an extended duration. " +
-                 "Try <b>holding</b> the button for 1.25 seconds",
-        buttonTime: 1.25,
-        action: (type, dur) => {
-          if (type != 'up') {
-            return;
-          }
-          if (dur < 1250) {
-            Notification.failure("That was too quick, make sure to hold the button for 1.25 seconds");
-            return;
-          }
-          Notification.success("Great! That was a 'hold', these are not common");
-          this.nextStep();
-        }
-      },
+      //// ================================================================================
+      //{
+      //  title: "Short Clicks",
+      //  content: "Let's start with basic input. A <b>Short Click</b> is simply a normal click. Perform a <b>Short Click</b> on the button below",
+      //  prepare: () => {
+      //    // run stuff to prepare the step if necessary
+      //  },
+      //  action: (type, dur) => {
+      //    if (type != 'up') {
+      //      return;
+      //    }
+      //    if (dur >= 250) {
+      //      Notification.failure("That was a long click, don't hold the button for too long (250 milliseconds)");
+      //      return;
+      //    }
+      //    Notification.success("Good, a short click is for cycling through options");
+      //    this.nextStep();
+      //  }
+      //},
+      //// ================================================================================
+      //{
+      //  title: "Long Clicks",
+      //  content: "Now, try a <b>Long Click</b> by holding the button for about 1 second",
+      //  buttonTime: 0.25,
+      //  action: (type, dur) => {
+      //    if (type != 'up') {
+      //      return;
+      //    }
+      //    if (dur < 250) {
+      //      Notification.failure("That was a short click, make sure to hold button for 0.25 seconds");
+      //      return;
+      //    }
+      //    Notification.success("Good! That was a long click");
+      //    this.buttonTime = 1.5;
+      //    this.nextStep();
+      //  }
+      //},
+      //// ================================================================================
+      //{
+      //  title: "Holds",
+      //  content: "The last way to press the button is by <b>holding</b> for an extended duration. " +
+      //           "Try <b>holding</b> the button for 1.25 seconds",
+      //  buttonTime: 1.25,
+      //  action: (type, dur) => {
+      //    if (type != 'up') {
+      //      return;
+      //    }
+      //    if (dur < 1250) {
+      //      Notification.failure("That was too quick, make sure to hold the button for 1.25 seconds");
+      //      return;
+      //    }
+      //    Notification.success("Great! That was a 'hold', these are not common");
+      //    this.nextStep();
+      //  }
+      //},
       // ================================================================================
       {
         title: "Turning On",
-        content: () => `Now that you understand the three input types, turn on the Duo with a <b>short click</b>`,
+        content: () => `Now that you understand the three input types, turn on the Duo with a <b>short click</b>.`,
         action: (type, dur) => {
           if (type != 'up') {
             return;
@@ -84,6 +87,7 @@ export default class Tutorial {
             return;
           }
           Notification.success(`Great! The Duo is now playing the first mode`);
+          this.tutorialTree.navigateToState('state-mode-0');
           this.lightshow.toggleEnabled();
           this.nextStep();
         }
@@ -119,6 +123,7 @@ export default class Tutorial {
                 Notification.failure("You need to hold the button for longer");
               } else {
                 Notification.success(`Fantastic! Holding the button for this short duration turns off the Duo`);
+                this.tutorialTree.navigateToState('state-off');
                 this.nextStep();
               }
             }
@@ -128,7 +133,7 @@ export default class Tutorial {
       // ================================================================================
       {
         title: "Turn back On",
-        content: () => `Turn the Duo back on with a <b>short click</b> to continue`,
+        content: () => `Turn the Duo back on with a <b>short click</b> to continue.`,
         action: (type, dur) => {
           if (type != 'up') {
             return;
@@ -138,6 +143,7 @@ export default class Tutorial {
             return;
           }
           Notification.success(`Good, the Duo is turned back on`);
+          this.tutorialTree.navigateToState('state-mode-0');
           this.lightshow.toggleEnabled();
           this.nextStep();
         }
@@ -145,33 +151,31 @@ export default class Tutorial {
       // ================================================================================
       {
         title: "Cycling Modes",
-        content: () => `<b>Short click</b> to cycle through the available modes. ${(this.stepData.clickCounter > 0) ? `Current Mode: ${this.stepData.clickCounter} / 5` : ``}`,
+        content: () => `<b>Short click</b> to cycle through the available modes.<br>${(this.stepData.clickCounter > 0) ? `Current Mode: ${this.stepData.clickCounter + 1} / 5` : ``}`,
         action: (type, dur) => {
           if (type != 'up') {
             return;
           }
-          if (dur > 250) {
-            Notification.failure("You are holding the button for too long, use fast clicks to cycle");
+          if (dur >= 250) {
+            Notification.failure("You held the button for too long, use a short click");
             return;
           }
-          if (this.stepData.clickCounter) {
-            this.vortexLib.Vortex.shortClick(0);
-          } else {
-            this.lightshow.setEnabled(true);
-          }
+          this.vortexLib.Vortex.shortClick(0);
           this.stepData.clickCounter++;
+          this.tutorialTree.navigateToState('state-mode-' + (this.stepData.clickCounter % 5));
           if (this.vortexLib.Vortex.curModeIndex() < 4) {
-            Notification.message(`Cycled to mode ${(this.stepData.clickCounter) % 6}`);
+            Notification.message(`Cycled to mode ${(this.stepData.clickCounter + 1) % 6}`);
           } else {
+            Notification.success(`You've successfully cycled through all the modes and returned to the first mode.`);
+            this.tutorialTree.navigateToState('state-mode-0');
             this.nextStep();
-            Notification.success(`You successfully cycled all the modes, you're back at the first mode`);
           }
         }
       },
       // ================================================================================
       {
         title: "Opening Menus",
-        content: "Pick a mode then <b>hold past off</b> till the <b>LEDs flash white</b>. Menus will only effect that mode",
+        content: "Pick a mode then <b>hold past off</b> till the <b>LEDs flash white</b>. The menus will only affect that specific mode",
         buttonTime: 1.25,
         prepare: () => {
           this.lightshow.setEnabled(true);
@@ -200,15 +204,18 @@ export default class Tutorial {
               if (dur < 250) {
                 Notification.message("You can open the menus from any mode");
                 this.vortexLib.Vortex.shortClick(0);
+                this.tutorialTree.navigateToState('state-mode-' + (++this.stepData.clickCounter % 5));
               } else if (dur < 500) {
                 Notification.failure("You released the button much too soon");
               } else if (dur >= 500) {
                 Notification.failure("You need to hold the button for longer");
               }
 
+              // re-enable it because they might have turned it off, don't open the menus for them either
               this.lightshow.setEnabled(true);
             } else {
-              Notification.success("Success, you entered the menus.");
+              this.tutorialTree.navigateToState('state-mode-' + (this.stepData.clickCounter % 5), 'state-menu-0');
+              Notification.success("Success, you entered the menus");
               this.nextStep(); // Move to the next step if held correctly
             }
           }
@@ -222,8 +229,13 @@ export default class Tutorial {
           if (type != 'up') {
             return;
           }
+          if (dur >= 250) {
+            Notification.failure("That was a long click, use a short click to cycle menus");
+            return;
+          }
+          this.tutorialTree.navigateToState('state-mode-' + this.vortexLib.Vortex.curModeIndex(),
+                                            'state-menu-' + (++this.stepData.clickCounter % 6));
           this.vortexLib.Vortex.shortClick(0);
-          this.stepData.clickCounter++;
           this.stepData.curMenu = (() => {
             switch (this.stepData.clickCounter % 6) {
               case 0: return 'Randomizer';
@@ -253,10 +265,13 @@ export default class Tutorial {
             return;
           }
           if (dur < 250) {
-            Notification.failure("That was a short click, use a long click to enter a menu");
+            Notification.failure("That was a short click. Use a long click to enter a menu");
             return;
           }
           Notification.success("You opened the mode randomizer");
+          this.tutorialTree.navigateToState('state-mode-' + this.vortexLib.Vortex.curModeIndex(),
+                                            'state-menu-0',
+                                            'state-led-selection');
           this.vortexLib.Vortex.longClick(0);
           this.nextStep();
         }
@@ -281,6 +296,9 @@ export default class Tutorial {
             Notification.message("Selected " + options[++this.stepData.clickCounter % 3]);
             this.vortexLib.Vortex.shortClick(0);
           } else {
+            this.tutorialTree.navigateToState('state-mode-' + this.vortexLib.Vortex.curModeIndex(),
+                                              'state-menu-0',
+                                              'state-randomizing');
             this.vortexLib.Vortex.longClick(0);
             Notification.success("Good, you picked the leds to be targeted by the menu");
             this.nextStep();
@@ -311,7 +329,7 @@ export default class Tutorial {
       // ================================================================================
       {
         title: "Understand Where You Are",
-        content: "After using a menu to edit a mode the changes are saved and the menu is closed. <b>Short click</b> to cycle through modes to see you're back on the main modes list",
+        content: "After editing a mode, the changes are saved, and the menu is closed. <b>Short click</b> to see that you're back on the main modes list",
         buttonTime: 0.25,
         prepare: () => {
         },
@@ -361,22 +379,20 @@ export default class Tutorial {
       // Desktop: use mousedown/mouseup
       deviceButton.addEventListener('mousedown', (event) => this.handlePressStart(event));
       deviceButton.addEventListener('mouseup', (event) => this.handlePressEnd(event));
-      // Add event listeners for spacebar press and release
-      document.addEventListener('keydown', (event) => {
-        if (event.code === 'Space') {
-          console.log("down");
-          this.handlePressStart(event);
-          event.preventDefault(); // Prevent default spacebar behavior (scrolling down the page)
-        }
-      });
-      document.addEventListener('keyup', (event) => {
-        if (event.code === 'Space') {
-          console.log("up");
-          this.handlePressEnd(event);
-          event.preventDefault(); // Prevent default spacebar behavior
-        }
-      });
     }
+    // Add event listeners for spacebar press and release
+    document.addEventListener('keydown', (event) => {
+      if (event.code === 'Space') {
+        this.handlePressStart(event);
+        event.preventDefault(); // Prevent default spacebar behavior (scrolling down the page)
+      }
+    });
+    document.addEventListener('keyup', (event) => {
+      if (event.code === 'Space') {
+        this.handlePressEnd(event);
+        event.preventDefault(); // Prevent default spacebar behavior
+      }
+    });
   }
 
   // Create the overlay with the tutorial content and buttons
@@ -411,6 +427,12 @@ export default class Tutorial {
   }
 
   handlePressStart(event) {
+    if (this.buttonDown) {
+      return;
+    }
+
+    this.buttonDown = true;
+
     this.pressStartTime = new Date().getTime();
     this.steps[this.currentStep].action('down');
 
@@ -433,6 +455,12 @@ export default class Tutorial {
   }
 
   handlePressEnd(event) {
+    if (!this.buttonDown) {
+      return;
+    }
+
+    this.buttonDown = false;
+
     const pressDuration = new Date().getTime() - this.pressStartTime;
     this.steps[this.currentStep].action('up', pressDuration);
     this.updateTutorialStep(this.currentStep);

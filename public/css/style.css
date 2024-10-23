@@ -311,69 +311,96 @@ body, html {
 }
 
 /* =======================================
-   Left-Side Pop-Out Tutorial Tree/Index
+   Tutorial Tree (Collapsible hierarchical structure with proper vertical "L" shapes)
    ======================================= */
 
 #tutorialTree {
   position: fixed;
-  top: 0;
-  left: 0;
+  top: 10px;
+  left: 10px;
   width: 250px;
-  height: 100%;
-  background-color: rgba(51, 51, 51, 0.95); /* Semi-transparent background */
-  color: white;
-  padding: 20px;
-  overflow-y: auto;
-  z-index: 500; /* Ensure it's above everything */
-  transform: translateX(-100%); /* Hidden by default (slides out of view) */
-  transition: transform 0.3s ease; /* Smooth slide in/out */
+  font-family: 'Roboto', sans-serif;
+  font-size: 14px;
+  color: #ddd;
+  z-index: 1000;
+  background-color: rgba(0, 0, 0, 0.7);
+  padding: 10px;
+  border-radius: 4px;
+  line-height: 1.5;
 }
 
-#tutorialTree.open {
-  transform: translateX(0); /* Slide in when open */
-}
-
-/* Tree nodes */
-.nav-tree {
-  list-style-type: none;
-  padding-left: 0;
-}
-
-.nav-tree .sub-tree {
-  padding-left: 20px;
-  display: none; /* Hidden by default */
-}
-
-.nav-tree .tree-node {
+.tree-node {
+  position: relative;
+  padding-left: 10px; /* Indent based on depth */
+  margin-left: 10px; /* Indentation based on level */
+  display: flex;
+  align-items: center;
   cursor: pointer;
-  padding: 10px 5px;
-  border-bottom: 1px solid #444;
 }
 
-.nav-tree .tree-node:hover {
+/* Vertical line connecting to previous sibling node */
+.tree-node::before {
+  content: "";
+  position: absolute;
+  left: 0px; /* Adjust for horizontal alignment */
+  top: 0px;
+  bottom: 0;
+  width: 1px;
   background-color: #555;
 }
 
-.nav-tree .active {
-  background-color: #28a745;
+/* Horizontal line to current node */
+.tree-node::after {
+  content: "";
+  position: absolute;
+  left: 0px;
+  top: 50%;
+  width: 10px;
+  height: 1px;
+  background-color: #555;
 }
 
-/* =======================================
-   Pull Tab for the Tree (Hamburger Button)
-   ======================================= */
+/* Remove vertical line for the last child */
+.tree-node:last-child::before {
+  top: 0%;
+  height: 50%;
+  bottom: auto;
+}
 
-#pullTab {
-  position: fixed;
-  top: 50%;
-  left: 0;
-  z-index: 501;
-  background-color: #333;
-  color: white;
-  padding: 10px 20px;
-  border-radius: 0 10px 10px 0;
-  cursor: pointer;
-  font-size: 18px;
-  transform: translateY(-50%); /* Center vertically */
+/* Remove the vertical and horizontal lines if there are no children */
+.tree-node.no-children::after, 
+.tree-node.no-children::before {
+  display: none;
+}
+
+/* Current active node */
+.tree-node.active {
+  font-weight: bold;
+  color: #28a745;
+}
+
+/* Collapse state: hide children connections */
+.tree-node.collapsed::before,
+.tree-node.collapsed::after {
+  background-color: transparent;
+}
+
+/* Hover effect */
+.tree-node:hover {
+  color: #fff;
+}
+
+/* Adjustments for mobile devices */
+@media (max-width: 768px) {
+  #tutorialTree {
+    width: 150px;
+    font-size: 8px;
+  }
+
+  .tree-node {
+    padding-left: 5px;
+    margin-left: 5px;
+  }
 }
 
 /* =======================================
@@ -433,3 +460,66 @@ body, html {
   background-color: #007bff;
 }
 
+
+
+
+/* =======================================
+   Tutorial Map (Flowchart-style)
+   ======================================= */
+
+#tutorialMap {
+  position: fixed;
+  top: 10%;
+  right: 10px;
+  width: 300px;
+  height: auto;
+  z-index: 1000;
+  background-color: rgba(0, 0, 0, 0.7);
+  padding: 10px;
+  border-radius: 8px;
+}
+
+.map-node {
+  position: relative;
+  padding: 10px;
+  margin: 10px 0;
+  background-color: #333;
+  color: #fff;
+  border: 1px solid #555;
+  border-radius: 4px;
+  cursor: pointer;
+  text-align: center;
+  transition: background-color 0.3s ease;
+}
+
+.map-node.active {
+  background-color: #28a745;
+}
+
+.map-node:hover {
+  background-color: #555;
+}
+
+/* Line to connect nodes */
+.map-line {
+  position: absolute;
+  width: 2px;
+  background-color: #aaa;
+  transform-origin: 0 0; /* Rotate based on start point */
+  z-index: 999;
+}
+
+/* Adjustments for mobile devices */
+@media (max-width: 768px) {
+  #tutorialMap {
+    width: 90vw;
+    left: 5vw;
+    top: 15vh;
+    padding: 5px;
+  }
+
+  .map-node {
+    font-size: 14px;
+    padding: 8px;
+  }
+}

@@ -2,7 +2,6 @@
 import VortexLib from './VortexLib.js';
 import Lightshow from './Lightshow.js';
 import Tutorial from './Tutorial.js';
-import TutorialTree from './TutorialTree.js';
 
 // Welcome message for the tutorial
 const welcomeTitle = "<h2>Welcome to the Interactive Duo Tutorial!</h2>";
@@ -46,8 +45,6 @@ VortexLib().then(vortexLib => {
     }
     lightshow.angle = 0; // Reset angle after changing shape
   });
-
-  //const tutorialTree = new TutorialTree(vortexLib);
 
   // Check if the welcome modal should be shown
   const showWelcome = localStorage.getItem('showWelcome') !== 'false';
