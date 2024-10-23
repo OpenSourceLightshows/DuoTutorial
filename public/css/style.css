@@ -1,3 +1,6 @@
+/* Importing nicer fonts */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@600&family=Roboto:wght@400');
+
 /* =======================================
    Global Styles for Body and Canvas
    ======================================= */
@@ -14,7 +17,7 @@ body, html {
 
 #lightshowCanvas {
   width: 100%;
-  height: 75vh; /* Default for large screens */
+  height: 65vh; /* Default for large screens */
   border: 1px solid black;
   display: block;
   background-color: black; /* For visibility */
@@ -24,28 +27,19 @@ body, html {
    Tutorial Overlay at the Bottom
    ======================================= */
 
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Roboto:wght@400&display=swap');
-
-/* Error message for incorrect actions */
-.tutorial-error-message {
-  color: red;
-  font-size: 14px;
-  margin-top: 10px;
-  display: none; /* Hidden by default */
-}
-
 .tutorial-overlay {
   position: fixed;
   bottom: 0;
   left: 0;
   width: 100%;
-  height: 25vh;
+  height: 35vh;
   background-color: rgba(30, 30, 30, 0.95);
   z-index: 1000; /* Ensure it stays on top */
   padding: 30px;
   box-sizing: border-box;
   display: flex;
   justify-content: center;
+  overflow-y: auto; /* Allow scrolling when content overflows */
 }
 
 .tutorial-content {
@@ -63,41 +57,65 @@ body, html {
 }
 
 .tutorial-step-content {
+  line-height: 1.5em; /* Adjust line height as needed */
+  min-height: 3em;    /* 2 lines of text = 2 * line-height */
+  align-items: center; /* Vertically center text within the area */
   font-family: 'Roboto', sans-serif;
-  font-size: 24px;
-  margin-bottom: 20px;
+  font-size: 22px;
 }
 
-/* Green button for simulating device clicks */
-.device-button {
-  background-color: #28a745; /* Green color */
-  color: white;
-  padding: 15px 30px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 18px;
+.progress-ring {
+  position: absolute;
+  top: 0;
+  left: 0;
   user-select: none;
 }
 
+.progress-ring__circle {
+  stroke-dasharray: 0 0;
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 0s;
+  transform: rotate(-90deg);
+  transform-origin: 50% 50%;
+  user-select: none;
+}
+
+.device-button {
+  background-color: #808080;
+  color: white;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  position: relative;
+  cursor: pointer;
+  border: 2px solid darkgray; /* Gray border around button */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto; /* Center horizontally */
+  margin-bottom: 20px; /* Add bottom margin */
+  user-select: none; /* Prevent text selection */
+  outline: none; /* Prevent focus outlines */
+  -webkit-tap-highlight-color: transparent; /* Remove mobile tap highlight */
+}
+
+.device-button-pressed {
+  background-color: #333333 !important; /* Dark green */
+}
+
 .device-button:hover {
-  background-color: #218838; /* Darker green on hover */
+  background-color: #555555; /* Darker green on hover */
 }
 
-/* Grayed-out Next button when disabled */
-.tutorial-actions .btn-next:disabled {
-  background-color: gray;
-  cursor: not-allowed;
+.device-button:active {
+  outline: none; /* Prevent focus outlines on active */
 }
-
-/* =======================================
-   Tutorial Actions (Prev, Next, Skip)
-   ======================================= */
 
 .tutorial-actions {
   display: flex;
-  justify-content: space-between;
-  margin-top: 30px;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
 }
 
 .tutorial-actions button {
@@ -138,30 +156,81 @@ body, html {
 }
 
 /* =======================================
+   Responsive Layout for Mobile
+   ======================================= */
+
+@media (max-width: 768px) {
+  .tutorial-overlay {
+    height: auto; /* Allow it to adjust based on content */
+    max-height: 50vh; /* Set a maximum height to avoid taking too much space */
+    padding: 15px; /* Reduce padding on mobile */
+  }
+
+  .tutorial-step-title {
+    font-size: 24px; /* Smaller title for mobile */
+  }
+
+  .tutorial-step-content {
+    font-size: 18px; /* Smaller content font size */
+  }
+
+  .tutorial-actions {
+    flex-direction: column; /* Stack buttons vertically */
+  }
+
+  .tutorial-actions button {
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 10px; /* Reduce padding */
+  }
+
+  .tutorial-actions button:last-child {
+    margin-bottom: 0;
+  }
+}
+
+/* =======================================
    Modal Styles (Welcome Modal)
    ======================================= */
 
-.modal {
+.modal-overlay {
   position: fixed;
-  z-index: 1000;
-  left: 0;
   top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent backdrop */
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  background-color: rgb(30, 30, 30); /* Dark gray with opacity */
+  z-index: 1000; /* Place it behind the modal but above the page content */
+}
+
+.modal {
+  position: fixed;
+  z-index: 1001;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%); /* Center the modal both horizontally and vertically */
+  width: 90%; /* Make the modal take up 90% of the screen width on smaller devices */
+  max-width: 400px; /* Set a maximum width so it doesn't grow too large */
+  height: auto; /* Let the height adjust based on the content */
+  max-height: 90vh; /* Set a maximum height for the modal to avoid overflow */
+  background-color: #181a1b;
+  padding: 20px; /* Reduce padding for mobile */
+  border: 1px solid #3e4446;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  overflow-y: auto; /* Enable vertical scrolling if the content overflows */
+  color: #d8d4cf;
 }
 
 .modal-content {
-  background-color: #181a1b;
-  margin: 10% auto;
-  padding: 30px;
-  border: 1px solid #3e4446;
-  border-radius: 5px;
-  width: 40%;
-  color: #d8d4cf;
+  width: 100%; /* Ensure content takes up full width */
+  padding: 10px; /* Add some padding for the content */
+  box-sizing: border-box; /* Ensure padding doesn't affect width */
+}
+
+.modal-title {
+  font-size: 24px; /* Reduce font size for mobile */
+  margin-bottom: 15px;
 }
 
 .modal-content input[type="text"] {
@@ -172,22 +241,19 @@ body, html {
   border-radius: 4px;
   background-color: #292c2e;
   color: #d8d4cf;
-  user-select: none;
-}
-
-.modal-title {
-  user-select: none;
 }
 
 .modal-content button {
+  width: 100%; /* Make buttons take the full width of the modal */
+  padding: 12px 15px;
+  margin-top: 10px;
   background-color: #202020;
   color: #d8d4cf;
   border: 1px solid #454545;
   border-radius: 4px;
-  padding: 10px 15px;
-  margin-right: 10px;
+  font-size: 16px; /* Adjust font size for mobile */
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: background-color 0.3s ease;
 }
 
 .modal-content button:hover {
@@ -197,16 +263,29 @@ body, html {
 .close {
   color: #aaa;
   float: right;
-  font-size: 28px;
+  font-size: 24px; /* Reduce size for mobile */
   font-weight: bold;
-  user-select: none;
+  cursor: pointer;
 }
 
 .close:hover,
 .close:focus {
   color: red;
-  text-decoration: none;
-  cursor: pointer;
+}
+
+@media (max-width: 480px) {
+  .modal-title {
+    font-size: 20px; /* Smaller title font size on very small devices */
+  }
+
+  .modal-content button {
+    padding: 10px; /* Slightly reduce padding for buttons on small screens */
+    font-size: 14px; /* Smaller button font size */
+  }
+
+  .close {
+    font-size: 20px; /* Slightly smaller close button on mobile */
+  }
 }
 
 /* =======================================
@@ -223,7 +302,7 @@ body, html {
   color: white;
   padding: 20px;
   overflow-y: auto;
-  z-index: 10000; /* Ensure it's above everything */
+  z-index: 500; /* Ensure it's above everything */
   transform: translateX(-100%); /* Hidden by default (slides out of view) */
   transition: transform 0.3s ease; /* Smooth slide in/out */
 }
@@ -265,7 +344,7 @@ body, html {
   position: fixed;
   top: 50%;
   left: 0;
-  z-index: 10001;
+  z-index: 501;
   background-color: #333;
   color: white;
   padding: 10px 20px;
@@ -280,24 +359,13 @@ body, html {
    ======================================= */
 
 @media (max-width: 768px) {
-  /* Make the tree take full width on mobile */
-  #tutorialTree {
-    width: 80%;
-    height: auto;
-    transform: translateX(-100%);
-  }
-
-  #pullTab {
-    font-size: 16px; /* Smaller pull tab on mobile */
-  }
-
   /* Adjust canvas and tutorial overlay heights for mobile */
   canvas#lightshowCanvas {
-    height: 60vh; /* Reduced height for smaller screens */
+    height: 55vh; /* Reduced height for smaller screens */
   }
 
   .tutorial-overlay {
-    height: 40vh; /* Increased height for tutorial content on smaller screens */
+    height: 45vh; /* Increased height for tutorial content on smaller screens */
   }
 
   .tutorial-content {
@@ -318,40 +386,56 @@ body, html {
   }
 }
 
+.notification-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px; /* Ensure minimal spacing between notifications */
+  justify-content: flex-end;
+  align-items: center;
+  position: fixed;
+  bottom: 10px; /* Position above the tutorial pane */
+  width: 100%; /* Center container */
+  pointer-events: none;
+  z-index: 600; /* Ensure the container stays above other elements */
+}
+
 .notification {
-  visibility: hidden; /* Hidden by default */
-  min-width: 250px; /* Set a minimum width */
-  margin-left: -125px; /* Negative half of the width to center the div */
-  background-color: #333; /* Dark background color */
-  color: #ccc;
-  text-align: center; /* Centered text */
-  border-radius: 4px; /* Rounded borders */
-  padding: 16px; /* Padding */
-  position: fixed; /* Sit on top of the screen */
-  z-index: 10; /* Add a z-index if needed */
-  left: 50%; /* Center the div */
-  top: 30px; /* 30px from the top */
+  position: relative;
+  min-width: 250px;
+  max-width: 90%;
+  padding: 16px;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  text-align: center;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  font-family: 'Roboto', sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  white-space: normal;
+  word-wrap: break-word;
+  opacity: 1; /* Notifications are fully visible immediately */
+  transition: transform 0.5s ease; /* Only apply transition for movement */
 }
 
 .notification.show {
-  visibility: visible; /* Show the notification */
-  animation: fadein 0.5s, fadeout 0.5s 2.5s; /* Animate in and out */
+  opacity: 1; /* Ensure notification is fully visible */
+}
+
+.notification.fade-out {
+  opacity: 0;
+  transition: opacity 0.5s ease; /* Fade out smoothly */
 }
 
 .notification.success {
-  color: #66FF00; /* Text color */
+  background-color: #28a745;
 }
 
 .notification.failure {
-  color: #FF0000; /* Text color */
+  background-color: #dc3545;
 }
 
-@keyframes fadein {
-  from {top: 0; opacity: 0;}
-  to {top: 30px; opacity: 1;}
+.notification.message {
+  background-color: #007bff;
 }
 
-@keyframes fadeout {
-  from {top: 30px; opacity: 1;}
-  to {top: 0; opacity: 0;}
-}

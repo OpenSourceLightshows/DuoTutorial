@@ -141,11 +141,11 @@ export default class Lightshow {
   // function to set the shape
   setShape(shape) {
     // no change shape
-    //if (this.currentShape === shape) {
-    //  this.direction *= -1;
-    //} else {
-    //  this.currentShape = shape;
-    //}
+    if (this.currentShape === shape) {
+      this.direction *= -1;
+    } else {
+      this.currentShape = shape;
+    }
   }
 
   draw() {

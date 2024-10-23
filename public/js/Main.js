@@ -46,23 +46,25 @@ VortexLib().then(vortexLib => {
 
   // Initialize the tutorial and pass vortexLib and lightshow instances
   const tutorial = new Tutorial(vortexLib, lightshow);
-  const tutorialTree = new TutorialTree(vortexLib);
+  //const tutorialTree = new TutorialTree(vortexLib);
 
   // Check if the welcome modal should be shown
   const showWelcome = localStorage.getItem('showWelcome') !== 'false';
 
   if (showWelcome) {
+    // Assuming you have a `welcomeModal` container for your modal
     const welcomeModal = document.createElement('div');
-    welcomeModal.classList.add('modal');
     welcomeModal.innerHTML = `
-      <div class="modal-content">
-        ${welcomeTitle}
-        ${welcomeBlurb}
-        <label><input type="checkbox" id="doNotShowAgain"> Do not show this again</label>
-        <button id="closeModal">Close</button>
+      <div class="modal-overlay"></div>
+      <div class="modal">
+        <div class="modal-content">
+          ${welcomeTitle}
+          ${welcomeBlurb}
+          <label><input type="checkbox" id="doNotShowAgain"> Do not show this again</label>
+          <button id="closeModal">Begin</button>
+        </div>
       </div>
     `;
-
     document.body.appendChild(welcomeModal);
 
     document.getElementById('doNotShowAgain').addEventListener('change', (event) => {
