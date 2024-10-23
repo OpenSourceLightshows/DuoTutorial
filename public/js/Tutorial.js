@@ -1,14 +1,13 @@
 import Notification from './Notification.js';
 
 export default class Tutorial {
-  constructor(vortexLib) {
+  constructor(vortexLib, lightshow) {
     this.vortexLib = vortexLib;
-    //this.lightshow = lightshow;
-    this.currentStep = 4,
+    this.lightshow = lightshow;
+    this.currentStep = 0,
     this.isActionCompleted = false; // Track if action is completed for each step
     this.pressStartTime = null; // Track press start time
     this.holdTimeouts = []; // To store timeouts for clearing on early release
-    //this.lightshow.to5gleEnabled();
 
     // Step-specific data (e.g., a counter for step 1)
     this.stepData = {
@@ -75,35 +74,35 @@ export default class Tutorial {
       // ================================================================================
       {
         title: "Turning On",
-        content: () => `Start by <b>short clicking</b> the button to turn on the Duo`,
+        content: () => `Now that you understand the three input types, turn on the Duo with a <b>short click</b>`,
         action: (type, dur) => {
           if (type != 'up') {
             return;
           }
           if (dur >= 250) {
-            Notification.failure("That's a long click, that turns on the Duo and toggles Conjure Mode");
+            Notification.failure("That's a long click, that toggles Conjure Mode");
             return;
           }
-          Notification.success(`Great! The Duo is now running it's first mode`);
-          //this.lightshow.toggleEnabled();
+          Notification.success(`Great! The Duo is now playing the first mode`);
+          this.lightshow.toggleEnabled();
           this.nextStep();
         }
       },
       // ================================================================================
       {
         title: "Turning Off",
-        content: () => `You can turn the Duo <b>off</b> by holding for 0.5 seconds to 1.25 seconds and releasing while the led is off`,
+        content: () => `Hold for half a second and release when the led is off to <b>turn the Duo off</b>`,
         buttonTime: 0.5,
         action: (type, dur) => {
           if (type === 'down') {
             // Call an action at 500ms
             const hold500ms = setTimeout(() => {
-              //this.lightshow.setEnabled(false);
+              this.lightshow.setEnabled(false);
             }, 500);
 
             // Call another action at 1250ms
             const hold1250ms = setTimeout(() => {
-              //this.lightshow.setEnabled(true);
+              this.lightshow.setEnabled(true);
             }, 1250);
 
             // Store timeouts to clear them on early release
@@ -128,8 +127,25 @@ export default class Tutorial {
       },
       // ================================================================================
       {
+        title: "Turn back On",
+        content: () => `Turn the Duo back on with a <b>short click</b> to continue`,
+        action: (type, dur) => {
+          if (type != 'up') {
+            return;
+          }
+          if (dur >= 250) {
+            Notification.failure("That was a long click, use a short click");
+            return;
+          }
+          Notification.success(`Good, the Duo is turned back on`);
+          this.lightshow.toggleEnabled();
+          this.nextStep();
+        }
+      },
+      // ================================================================================
+      {
         title: "Cycling Modes",
-        content: () => `Turn the Duo back on and <b>short click</b> to cycle through the available modes. ${(this.stepData.clickCounter > 0) ? `Current Mode: ${this.stepData.clickCounter} / 5` : ``}`,
+        content: () => `<b>Short click</b> to cycle through the available modes. ${(this.stepData.clickCounter > 0) ? `Current Mode: ${this.stepData.clickCounter} / 5` : ``}`,
         action: (type, dur) => {
           if (type != 'up') {
             return;
@@ -140,6 +156,8 @@ export default class Tutorial {
           }
           if (this.stepData.clickCounter) {
             this.vortexLib.Vortex.shortClick(0);
+          } else {
+            this.lightshow.setEnabled(true);
           }
           this.stepData.clickCounter++;
           if (this.vortexLib.Vortex.curModeIndex() < 4) {
@@ -153,18 +171,21 @@ export default class Tutorial {
       // ================================================================================
       {
         title: "Opening Menus",
-        content: "Pick a mode then <b>hold</b> past <b>off</b> till the LEDs flash white. Menus will only effect that mode",
+        content: "Pick a mode then <b>hold past off</b> till the <b>LEDs flash white</b>. Menus will only effect that mode",
         buttonTime: 1.25,
+        prepare: () => {
+          this.lightshow.setEnabled(true);
+        },
         action: (type, dur) => {
           if (type === 'down') {
             // Call an action at 500ms
             const hold500ms = setTimeout(() => {
-              //this.lightshow.setEnabled(false);
+              this.lightshow.setEnabled(false);
             }, 500);
 
             // Call another action at 1250ms
             const hold1250ms = setTimeout(() => {
-              //this.lightshow.setEnabled(true);
+              this.lightshow.setEnabled(true);
               this.vortexLib.Vortex.menuEnterClick(0);
             }, 1250);
 
@@ -185,7 +206,7 @@ export default class Tutorial {
                 Notification.failure("You need to hold the button for longer");
               }
 
-              //this.lightshow.setEnabled(true);
+              this.lightshow.setEnabled(true);
             } else {
               Notification.success("Success, you entered the menus.");
               this.nextStep(); // Move to the next step if held correctly
@@ -319,11 +340,10 @@ export default class Tutorial {
         }
       },
     ];
-
-    this.init();
   }
 
-  init() {
+  init(lightshow) {
+    this.lightshow = lightshow;
     this.createTutorialOverlay();
     // run init
     if (typeof this.steps[this.currentStep].prepare === 'function') {
@@ -341,6 +361,21 @@ export default class Tutorial {
       // Desktop: use mousedown/mouseup
       deviceButton.addEventListener('mousedown', (event) => this.handlePressStart(event));
       deviceButton.addEventListener('mouseup', (event) => this.handlePressEnd(event));
+      // Add event listeners for spacebar press and release
+      document.addEventListener('keydown', (event) => {
+        if (event.code === 'Space') {
+          console.log("down");
+          this.handlePressStart(event);
+          event.preventDefault(); // Prevent default spacebar behavior (scrolling down the page)
+        }
+      });
+      document.addEventListener('keyup', (event) => {
+        if (event.code === 'Space') {
+          console.log("up");
+          this.handlePressEnd(event);
+          event.preventDefault(); // Prevent default spacebar behavior
+        }
+      });
     }
   }
 
@@ -361,6 +396,7 @@ export default class Tutorial {
             </svg>
           </div>
         </div>
+        <p class="tutorial-step-number">Step 1 of ${this.steps.length}</p>
       </div>
     `;
     document.body.appendChild(tutorialOverlay);
@@ -419,6 +455,7 @@ export default class Tutorial {
     document.querySelector('.tutorial-step-title').textContent = `${step.title}`;
     let content = (typeof step.content === 'function') ? step.content() : step.content;
     document.querySelector('.tutorial-step-content').innerHTML = content; 
+    document.querySelector('.tutorial-step-number').textContent = `${stepIndex + 1}`;
   }
 
   // Simulate the device click action for a step

@@ -7,8 +7,8 @@ import TutorialTree from './TutorialTree.js';
 // Welcome message for the tutorial
 const welcomeTitle = "<h2>Welcome to the Interactive Duo Tutorial!</h2>";
 const welcomeBlurb = `
-  This is a guide designed to introduce the Duo and Vortex Engine, it features a virtual Duo that can be controlled by clicking a button.<br><br>
-  The goal is to demonstrate how to use the Duo and navigate it's menus. Follow along with your own Duo and learn how to make the most of it</p>
+  This is a guide designed to introduce the Duo and Vortex Engine, it features a virtual Duo that can be controlled by clicking the button or pressing spacebar.<br><br>
+  The goal is to demonstrate how to use the Duo and navigate it's menus. Follow along with your own Duo and learn how to make the most of it!</p>
 `;
 
 // Initialize the VortexLib WebAssembly module
@@ -20,8 +20,8 @@ VortexLib().then(vortexLib => {
   const tutorial = new Tutorial(vortexLib);
   
   // Create a new instance of the Lightshow
-  let lightshow = new Lightshow(vortexLib, canvas);
-    lightshow.toggleEnabled();
+  const lightshow = new Lightshow(vortexLib, canvas);
+  tutorial.init(lightshow);
 
   // Start the lightshow
   lightshow.start();
