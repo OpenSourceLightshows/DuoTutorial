@@ -60,6 +60,7 @@ body, html {
   align-items: center; /* Vertically center text within the area */
   font-family: 'Roboto', sans-serif;
   font-size: 22px;
+  margin-bottom: 0;
 }
 
 .tutorial-step-number {
@@ -102,7 +103,6 @@ body, html {
   height: 170px;
   position: fixed;
   z-index: 1100;
-  left: 50%;
   transform: translate(-50%, 0%); /* Center the modal both horizontally and vertically */
   bottom: 40px;
   display: flex;
@@ -115,8 +115,7 @@ body, html {
 }
 
 .device-button {
-  background-color: rgba(128, 128, 128, 0.5);
-  color: white;
+  background-color: rgba(40, 40, 40, 0.5);
   padding: 0;
   width: 64px;
   height: 64px;
@@ -165,11 +164,9 @@ body, html {
 }
 
 .tutorial-actions {
-
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: 20px;
 }
 
 .tutorial-actions button {
@@ -207,54 +204,6 @@ body, html {
 .tutorial-actions .btn-skip:hover {
   color: #d9534f;
   border-color: #d9534f;
-}
-
-/* =======================================
-   Responsive Layout for Mobile
-   ======================================= */
-
-@media (max-width: 768px) {
-  /* Adjust canvas and tutorial overlay heights for mobile */
-  canvas#mainLightshowCanvas {
-    width: 100%;
-    height: 45vh;
-  }
-
-  .tutorial-overlay {
-  }
-
-  .tutorial-overlay {
-    height: 55vh; /* Increased height for tutorial content on smaller screens */
-    padding: 5px; /* Reduce padding on mobile */
-  }
-
-  .tutorial-step-title {
-    font-size: 22px; /* Smaller title for mobile */
-    text-align: left;
-    margin-left: 5px;
-    margin-bottom: 5px;
-    margin-top: 5px;
-  }
-
-  .tutorial-step-content {
-    font-size: 16px; /* Smaller content font size */
-    text-align: left;
-    margin: 0 5px;
-  }
-
-  .tutorial-actions {
-    flex-direction: column; /* Stack buttons vertically */
-  }
-
-  .tutorial-actions button {
-    width: 100%;
-    margin-bottom: 10px;
-    padding: 10px; /* Reduce padding */
-  }
-
-  .tutorial-actions button:last-child {
-    margin-bottom: 0;
-  }
 }
 
 /* =======================================
@@ -345,21 +294,6 @@ body, html {
   color: red;
 }
 
-@media (max-width: 480px) {
-  .modal-title {
-    font-size: 20px; /* Smaller title font size on very small devices */
-  }
-
-  .modal-content button {
-    padding: 10px; /* Slightly reduce padding for buttons on small screens */
-    font-size: 14px; /* Smaller button font size */
-  }
-
-  .close {
-    font-size: 20px; /* Slightly smaller close button on mobile */
-  }
-}
-
 /* =======================================
    Tutorial Tree (Collapsible hierarchical structure with proper vertical "L" shapes)
    ======================================= */
@@ -440,21 +374,8 @@ body, html {
   color: #fff;
 }
 
-/* Adjustments for mobile devices */
-@media (max-width: 768px) {
-  #tutorialTree {
-    width: 150px;
-    font-size: 8px;
-  }
-
-  .tree-node {
-    padding-left: 5px;
-    margin-left: 5px;
-  }
-}
-
 /* =======================================
-   Responsive Layout for Mobile
+   Notifications
    ======================================= */
 
 .notification-container {
@@ -559,7 +480,10 @@ body, html {
   z-index: 4999;
 }
 
-/* Adjustments for mobile devices */
+/* =======================================
+   Responsive Layout for Mobile
+   ======================================= */
+
 @media (max-width: 768px) {
   #tutorialMap {
     width: 90vw;
@@ -571,5 +495,83 @@ body, html {
   .map-node {
     font-size: 16px;
     padding: 8px;
+  }
+
+  .notification {
+    position: relative;
+    min-width: 180px;
+    max-width: 90%;
+    padding: 12px;
+    font-size: 16px;
+    line-height: 1.5;
+    white-space: normal;
+    word-wrap: break-word;
+    opacity: 1; /* Notifications are fully visible immediately */
+    transition: transform 0.5s ease; /* Only apply transition for movement */
+  }
+
+  /* Adjust canvas and tutorial overlay heights for mobile */
+  canvas#mainLightshowCanvas {
+    width: 100%;
+    height: 45vh;
+  }
+
+  .tutorial-overlay {
+  }
+
+  .tutorial-overlay {
+    height: 55vh; /* Increased height for tutorial content on smaller screens */
+    padding: 5px; /* Reduce padding on mobile */
+  }
+
+  .tutorial-step-title {
+    font-size: 22px; /* Smaller title for mobile */
+    text-align: left;
+    margin-left: 5px;
+    margin-bottom: 5px;
+    margin-top: 5px;
+  }
+
+  .tutorial-step-content {
+    font-size: 16px; /* Smaller content font size */
+    text-align: left;
+    margin: 0 5px;
+  }
+
+  .tutorial-actions {
+    flex-direction: column; /* Stack buttons vertically */
+  }
+
+  .tutorial-actions button {
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 10px; /* Reduce padding */
+  }
+
+  .tutorial-actions button:last-child {
+    margin-bottom: 0;
+  }
+
+  .modal-title {
+    font-size: 20px; /* Smaller title font size on very small devices */
+  }
+
+  .modal-content button {
+    padding: 10px; /* Slightly reduce padding for buttons on small screens */
+    font-size: 14px; /* Smaller button font size */
+  }
+
+  .close {
+    font-size: 20px; /* Slightly smaller close button on mobile */
+  }
+
+  #tutorialTree {
+    width: 150px;
+    font-size: 8px;
+  }
+
+  .tree-node {
+    padding-left: 5px;
+    margin-left: 5px;
   }
 }

@@ -430,10 +430,14 @@ export default class Tutorial {
     // Get the duo-image element to match the size
     const deviceButton = tutorialOverlay.querySelector('.device-button');
 
+
+    this.ledCanvasContainer = document.createElement('div');
+    this.ledCanvasContainer.id = 'ledCanvasContainer';
     // Create the canvas element dynamically
     this.ledCanvas = document.createElement('canvas');
     this.ledCanvas.id = 'ledLightshowCanvas';
-    deviceButton.insertAdjacentElement('afterend', this.ledCanvas);
+    this.ledCanvasContainer.appendChild(this.ledCanvas);
+    deviceButton.insertAdjacentElement('afterend', this.ledCanvasContainer);
 
     // Initialize progress ring to be empty (full stroke-dashoffset)
     const circle = document.querySelector('.progress-ring__circle');

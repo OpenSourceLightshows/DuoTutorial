@@ -5,7 +5,7 @@ export default class TutorialTree {
 
     // Define the initial map structure with children
     this.map = {
-      'state-all': { label: 'Nav', children: ['state-off', 'state-on'], isExpanded: true},
+      'state-all': { label: 'Duo Navigation', children: ['state-off', 'state-on'], isExpanded: true},
       'state-off': { label: 'Off', children: [] },
       'state-on': { label: 'On', children: ['state-mode-0', 'state-mode-1', 'state-mode-2', 'state-mode-3', 'state-mode-4'] },
       'state-mode-0': { label: 'Mode 1', children: ['state-menu-0', 'state-menu-1', 'state-menu-2', 'state-menu-3', 'state-menu-4', 'state-menu-5' ] },
