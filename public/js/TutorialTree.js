@@ -45,7 +45,7 @@ export default class TutorialTree {
     nodeElement.id = stateId;
     if ('ontouchstart' in window) {
       // mobile? I think?
-      nodeElement.style.marginLeft = `${depth * 5}px`; // Indent based on depth level
+      nodeElement.style.marginLeft = `${depth * 6}px`; // Indent based on depth level
     } else {
       nodeElement.style.marginLeft = `${depth * 15}px`; // Indent based on depth level
     }

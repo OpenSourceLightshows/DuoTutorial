@@ -372,6 +372,10 @@ export default class Tutorial {
     }
     this.updateTutorialStep(this.currentStep);
 
+    // disable duoImage context menu
+    const duoImage  = document.querySelector('.duo-image');
+    duoImage.addEventListener("contextmenu",function(e){ e.preventDefault(); return false; });
+
     // Handle mousedown and touchstart for the device button (pressing the button)
     const deviceButton = document.getElementById('deviceButton');
     if ('ontouchstart' in window) {
@@ -440,55 +444,61 @@ export default class Tutorial {
     circle.style.strokeDashoffset = `${circumference}`;
   }
 
+  // Adjust the handlePressStart method to ensure correct press start handling
   handlePressStart(event) {
     if (this.buttonDown) {
-      return;
+      return; // Prevent multiple press starts if already pressed
     }
 
-    this.buttonDown = true;
+    this.buttonDown = true; // Mark the button as being pressed
+    this.pressStartTime = new Date().getTime(); // Store the press start time
 
-    this.pressStartTime = new Date().getTime();
+    // Trigger the 'down' action for the current step
     this.steps[this.currentStep].action('down');
 
+    // Update the progress ring for long press visualization
     const circle = document.querySelector('.progress-ring__circle');
     const radius = circle.r.baseVal.value;
     const circumference = 2 * Math.PI * radius;
-
-    // Set strokeDasharray and start with the circle fully empty
     circle.style.strokeDasharray = `${circumference} ${circumference}`;
-    circle.style.strokeDashoffset = `${circumference}`; // Set it to full circumference (empty)
+    circle.style.strokeDashoffset = `${circumference}`; // Start with the circle empty
 
-    // Animate the stroke fill if buttonTime is defined
+    // Animate the stroke fill for buttonTime if defined
     if (this.steps[this.currentStep].buttonTime) {
-      // Reapply the transition to animate the fill
       circle.style.transition = `stroke-dashoffset ${this.steps[this.currentStep].buttonTime}s linear`;
-      circle.style.strokeDashoffset = '0'; // Progress starts to fill
+      circle.style.strokeDashoffset = '0'; // Start the progress bar fill
     }
 
+    // Add visual indication of button press
     document.querySelector('.device-button').classList.add('device-button-pressed');
   }
 
+  // Adjust the handlePressEnd method to ensure correct press release handling
   handlePressEnd(event) {
     if (!this.buttonDown) {
-      return;
+      return; // Prevent handling press end if button wasn't pressed
     }
 
-    this.buttonDown = false;
+    this.buttonDown = false; // Mark the button as released
 
+    // Calculate the duration of the button press
     const pressDuration = new Date().getTime() - this.pressStartTime;
-    this.steps[this.currentStep].action('up', pressDuration);
-    this.updateTutorialStep(this.currentStep);
 
-    // Reset the progress bar
+    // Trigger the 'up' action with the press duration
+    this.steps[this.currentStep].action('up', pressDuration);
+
+    // Reset the progress ring to its initial state
     const circle = document.querySelector('.progress-ring__circle');
     const radius = circle.r.baseVal.value;
     const circumference = 2 * Math.PI * radius;
+    circle.style.transition = 'none'; // Instantly reset the progress bar
+    circle.style.strokeDashoffset = `${circumference}`; // Set back to full circumference (empty)
 
-    // Instantly reset the stroke-dashoffset without any transition
-    circle.style.transition = 'none'; // Remove transition for an instant reset
-    circle.style.strokeDashoffset = `${circumference}`; // Reset to full circumference (empty)
-
+    // Remove the visual indication of button press
     document.querySelector('.device-button').classList.remove('device-button-pressed');
+
+    // Update the tutorial step based on the action performed
+    this.updateTutorialStep(this.currentStep);
   }
 
   // Update the current step and disable the Next button until action is completed
