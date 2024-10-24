@@ -16,8 +16,8 @@ export default class Lightshow {
     this.canvas.width = rect.width;  // Set the canvas internal width to match the displayed size
     this.canvas.height = rect.height;  // Set the canvas internal height to match the displayed size
     this.radius = ((this.canvas.width > this.canvas.height) ? this.canvas.height : this.canvas.width) / 3;
-    this.tickRate = 20;
-    this.trailSize = 60;
+    this.tickRate = 1;
+    this.trailSize = 150;
     this.spread = 25;
     this.angle = 0;
     this.currentShape = 'circle'; // Default shape
@@ -39,6 +39,11 @@ export default class Lightshow {
 
     // Initialize histories for each LED
     this.updateHistories();
+  }
+
+  setFlashCanvas(canvas) {
+    this.flashCanvas = canvas;
+    this.flashCtx = this.flashCanvas.getContext('2d');
   }
 
   toggleEnabled() {
@@ -204,6 +209,34 @@ export default class Lightshow {
       }
     });
 
+    if (!this.histories.length) {
+        this.flashCtx.fillStyle = `rgba(0, 0, 0, 1)`;
+        this.flashCtx.fillRect(100, 0, 100, 85);
+    }
+
+    // Draw flash effect for both histories (first LED in each history)
+    this.histories.forEach((history, historyIndex) => {
+      if (!this.flashCtx) {
+        return;
+      }
+      if (history.length > 0) {
+        const point = history[history.length - 1];
+        if (!point.color.red && !point.color.green && !point.color.blue) {
+          this.flashCtx.fillStyle = `rgba(0, 0, 0, 0.5)`;
+        } else {
+          this.flashCtx.fillStyle = `rgba(${point.color.red}, ${point.color.green}, ${point.color.blue}, 1)`;
+        }
+        if (historyIndex == 0) {
+          this.flashCtx.fillRect(100, 0, 100, 60);
+        } else {
+          this.flashCtx.fillRect(130, 55, 40, 25);
+        }
+      } else {
+        this.flashCtx.fillStyle = `rgba(0, 0, 0, 1)`;
+        this.flashCtx.fillRect(0, 0, 170, 170);
+      }
+    });
+
     // Ensure histories do not exceed the trail size
     this.histories.forEach(history => {
       while (history.length > this.trailSize) {
@@ -214,9 +247,30 @@ export default class Lightshow {
     requestAnimationFrame(this.draw.bind(this));
   }
 
+  drawFlashHistory(index, point) {
+    const flashFadeFactor = 0.95; // Adjust fade-out speed for flash
+
+  }
+
+  flashDraw() {
+    if (this._pause) return;
+
+    const newColor = this.vortexLib.RunTick(this.vortex);
+    if (newColor) {
+    }
+
+    this.animationFrameId = requestAnimationFrame(this.boundFlashDraw);
+  }
+
   feedCirclePoints() {
     const centerX = (this.canvas.width / 2);
     const centerY = this.canvas.height / 2;
+
+    // Set up variables to control flashing behavior
+    const flashX = this.canvas.width * 0.1;  // Arbitrary location for flashing
+    const flashY = this.canvas.height * 0.1; // Arbitrary location for flashing
+    const flashInterval = 100;  // Controls how frequently the flash occurs
+    let lastFlashTime = Date.now();  // To track flash timing
 
     for (let i = 0; i < this.tickRate; i++) {
       const leds = this.vortexLib.Tick();

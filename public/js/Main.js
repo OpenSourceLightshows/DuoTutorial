@@ -15,12 +15,16 @@ VortexLib().then(vortexLib => {
   // Initialize the Vortex engine (since it's static in the WASM version)
   vortexLib.Init();
 
-  const canvas = document.getElementById('lightshowCanvas');
+  const mainCanvas = document.getElementById('mainLightshowCanvas');
   const tutorial = new Tutorial(vortexLib);
-  
-  // Create a new instance of the Lightshow
-  const lightshow = new Lightshow(vortexLib, canvas);
+
+  // okay this is kinda dumb first init the lightshow with the main canvas
+  const lightshow = new Lightshow(vortexLib, mainCanvas);
+  // then init the tutorial with reference to the lightshow so it can control it
   tutorial.init(lightshow);
+  // but then pass an element created by the tutorial back to the lightshow so it
+  // can render to it (the second canvas under the leds)
+  lightshow.setFlashCanvas(tutorial.ledCanvas);
 
   // Start the lightshow
   lightshow.start();

@@ -15,9 +15,9 @@ body, html {
   overflow: hidden; /* Prevent overflow */
 }
 
-#lightshowCanvas {
+#mainLightshowCanvas {
   width: 100%;
-  height: 65vh;
+  height: 55vh;
   border: 1px solid black;
   background-color: black; /* For visibility */
 }
@@ -28,10 +28,10 @@ body, html {
 
 .tutorial-overlay {
   width: 100%;
-  height: 35vh;
+  height: 45vh;
   background-color: rgba(30, 30, 30, 0.95);
   z-index: 1000; /* Ensure it stays on top */
-  padding: 20px;
+  padding: 10px;
   box-sizing: border-box;
   display: flex;
   justify-content: center;
@@ -39,6 +39,8 @@ body, html {
 }
 
 .tutorial-content {
+  position: relative;
+  height: 350px;
   max-width: 800px;
   width: 100%;
   text-align: center;
@@ -48,8 +50,8 @@ body, html {
 .tutorial-step-title {
   font-family: 'Montserrat', sans-serif;
   font-size: 28px;
-  margin-bottom: 14px;
-  margin-top: 0;
+  margin-bottom: 20px;
+  margin-top: 10px;
 }
 
 .tutorial-step-content {
@@ -57,19 +59,17 @@ body, html {
   min-height: 3em;    /* 2 lines of text = 2 * line-height */
   align-items: center; /* Vertically center text within the area */
   font-family: 'Roboto', sans-serif;
-  font-size: 20px;
+  font-size: 22px;
 }
 
 .tutorial-step-number {
   opacity: 0.25;
   position: fixed;
-  margin: 0;
+  margin: 0 0;
   bottom: 10px; /* Adjust this value to move it closer or further from the bottom */
-  left: 50%;
-  transform: translateX(-50%);
   color: lightgray;
-  font-size: 18px;
-  z-index: 1001; /* Ensure it stays above other content */
+  font-size: 16px;
+  z-index: 850; /* Ensure it stays above other content */
   text-align: center;
 }
 
@@ -78,6 +78,7 @@ body, html {
   top: 0;
   left: 0;
   user-select: none;
+  padding: 0;
 }
 
 .progress-ring__circle {
@@ -89,16 +90,42 @@ body, html {
   user-select: none;
 }
 
+.device-button-text {
+  font-family: 'Roboto', sans-serif;
+  font-size: 12px;
+  color: white;
+}
+
+#ledLightshowCanvas {
+  padding: 0;
+  width: 170px;
+  height: 170px;
+  position: fixed;
+  z-index: 1100;
+  left: 50%;
+  transform: translate(-50%, 0%); /* Center the modal both horizontally and vertically */
+  bottom: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto; /* Center horizontally */
+  user-select: none; /* Prevent text selection */
+  outline: none; /* Prevent focus outlines */
+  -webkit-tap-highlight-color: transparent; /* Remove mobile tap highlight */
+}
+
 .device-button {
   background-color: rgba(128, 128, 128, 0.5);
   color: white;
-  width: 80px;
-  height: 80px;
+  padding: 0;
+  width: 64px;
+  height: 64px;
+  z-index: 1500;
   border-radius: 50%;
   position: fixed;
-  bottom: 30px;
+  bottom: 40px;
   cursor: pointer;
-  border: 2px solid darkgray; /* Gray border around button */
+  border: 2px solid white;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -121,7 +148,24 @@ body, html {
   outline: none; /* Prevent focus outlines on active */
 }
 
+.duo-image {
+  color: white;
+  z-index: 1200;
+  max-height: 170px;
+  position: fixed;
+  bottom: 30px;
+  cursor: pointer;
+  align-items: center;
+  border: 1px solid #292929;
+  margin: 0 auto;
+  margin-bottom: 10px;
+  user-select: none;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
 .tutorial-actions {
+
   display: flex;
   justify-content: center;
   align-items: center;
@@ -171,25 +215,27 @@ body, html {
 
 @media (max-width: 768px) {
   /* Adjust canvas and tutorial overlay heights for mobile */
-  canvas#lightshowCanvas {
+  canvas#mainLightshowCanvas {
     width: 100%;
-    height: 55vh;
+    height: 45vh;
   }
 
   .tutorial-overlay {
   }
 
   .tutorial-overlay {
-    height: 45vh; /* Increased height for tutorial content on smaller screens */
+    height: 55vh; /* Increased height for tutorial content on smaller screens */
     padding: 15px; /* Reduce padding on mobile */
   }
 
   .tutorial-step-title {
-    font-size: 24px; /* Smaller title for mobile */
+    font-size: 22px; /* Smaller title for mobile */
+    text-align: left;
   }
 
   .tutorial-step-content {
-    font-size: 18px; /* Smaller content font size */
+    font-size: 16px; /* Smaller content font size */
+    text-align: left;
   }
 
   .tutorial-actions {
@@ -218,12 +264,12 @@ body, html {
   width: 100%;
   height: 100%;
   background-color: rgb(30, 30, 30); /* Dark gray with opacity */
-  z-index: 1000; /* Place it behind the modal but above the page content */
+  z-index: 10000; /* Place it behind the modal but above the page content */
 }
 
 .modal {
   position: fixed;
-  z-index: 1001;
+  z-index: 10001;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%); /* Center the modal both horizontally and vertically */
@@ -322,8 +368,8 @@ body, html {
   font-family: 'Roboto', sans-serif;
   font-size: 14px;
   color: #ddd;
-  z-index: 1000;
-  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 5000;
+  background-color: rgba(0, 0, 0, 0);
   padding: 10px;
   border-radius: 4px;
   line-height: 1.5;
@@ -417,7 +463,7 @@ body, html {
   bottom: 10px; /* Position above the tutorial pane */
   width: 100%; /* Center container */
   pointer-events: none;
-  z-index: 600; /* Ensure the container stays above other elements */
+  z-index: 5000; /* Ensure the container stays above other elements */
 }
 
 .notification {
@@ -473,7 +519,7 @@ body, html {
   right: 10px;
   width: 300px;
   height: auto;
-  z-index: 1000;
+  z-index: 5000;
   background-color: rgba(0, 0, 0, 0.7);
   padding: 10px;
   border-radius: 8px;
@@ -506,7 +552,7 @@ body, html {
   width: 2px;
   background-color: #aaa;
   transform-origin: 0 0; /* Rotate based on start point */
-  z-index: 999;
+  z-index: 4999;
 }
 
 /* Adjustments for mobile devices */

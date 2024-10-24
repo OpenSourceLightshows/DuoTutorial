@@ -77,7 +77,7 @@ export default class Tutorial {
       // ================================================================================
       {
         title: "Turning On",
-        content: () => `Now that you understand the three input types, turn on the Duo with a <b>short click</b>.`,
+        content: () => `Turn on the Duo with a <b>short click</b>.`,
         action: (type, dur) => {
           if (type != 'up') {
             return;
@@ -400,23 +400,32 @@ export default class Tutorial {
     const tutorialOverlay = document.createElement('div');
     tutorialOverlay.classList.add('tutorial-overlay');
     tutorialOverlay.innerHTML = `
-      <div class="tutorial-content" style="text-align: center; position: relative; height: 350px;">  <!-- Adjusted height -->
+      <div class="tutorial-content">
         <h2 class="tutorial-step-title"></h2>
         <p class="tutorial-step-content"></p>
-        <div class="tutorial-actions" style="position: absolute; top: 60%; left: 50%; transform: translate(-50%, -50%);">  <!-- Adjusted top value -->
+        <div class="tutorial-actions">
+          <img src="../images/duo-tutorial-leds.png" alt="Duo Logo" class="duo-image">
           <div id="deviceButton" class="device-button">
             <!-- SVG Circular Progress Bar -->
-            <svg class="progress-ring" width="80" height="80">
-              <circle class="progress-ring__circle" stroke="#0080ff" stroke-width="6" fill="transparent" r="38" cx="40" cy="40"/>
+            <a class=device-button-text>Press</a>
+            <svg class="progress-ring" width="64" height="64">
+              <circle class="progress-ring__circle" stroke="#0080ff" stroke-width="6" fill="transparent" r="28" cx="32" cy="32"/>
             </svg>
           </div>
-          <img src="../images/duo-logo-square-512.png" alt="Duo Logo" style="display: block; margin: 10px auto; width: 200px;">  <!-- Adjusted image width -->
+          <p class="tutorial-step-number">1</p>
         </div>
-        <p class="tutorial-error-message" id="errorMessage" style="color:red; display:none;"></p>
-        <p class="tutorial-step-number">Step 1 of ${this.steps.length}</p>
       </div>
     `;
     document.body.appendChild(tutorialOverlay);
+
+    // Get the duo-image element to match the size
+    const deviceButton = tutorialOverlay.querySelector('.device-button');
+
+    // Create the canvas element dynamically
+    this.ledCanvas = document.createElement('canvas');
+    this.ledCanvas.id = 'ledLightshowCanvas';
+    deviceButton.insertAdjacentElement('afterend', this.ledCanvas);
+
     // Initialize progress ring to be empty (full stroke-dashoffset)
     const circle = document.querySelector('.progress-ring__circle');
     const radius = circle.r.baseVal.value;
@@ -425,7 +434,7 @@ export default class Tutorial {
     // Initially set it to full circumference (empty)
     circle.style.strokeDasharray = `${circumference} ${circumference}`;
     circle.style.strokeDashoffset = `${circumference}`;
-}
+  }
 
   handlePressStart(event) {
     if (this.buttonDown) {
