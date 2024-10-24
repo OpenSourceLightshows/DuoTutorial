@@ -279,7 +279,7 @@ export default class Tutorial {
       // ================================================================================
       {
         title: "Select Leds",
-        content: "<b>Short click</b> to pick which leds will be targeted, <b>long click</b> to select those leds",
+        content: () => `<b>Short click</b> to pick which leds will be targeted, <b>long click</b> to select those leds<br>Targeting: ${this.stepData.targetLed}`,
         buttonTime: 0.25,
         prepare: () => {
         },
@@ -292,8 +292,12 @@ export default class Tutorial {
             'Tip Led',
             'Top Led'
           ];
+          // target is current click count option
+          this.stepData.targetLed = options[this.stepData.clickCounter % 3];
           if (dur < 250) {
-            Notification.message("Selected " + options[++this.stepData.clickCounter % 3]);
+            // unless they click the re-assign target
+            this.stepData.targetLed = options[++this.stepData.clickCounter % 3];
+            Notification.message("Selected " + this.stepData.targetLed);
             this.vortexLib.Vortex.shortClick(0);
           } else {
             this.tutorialTree.navigateToState('state-mode-' + this.vortexLib.Vortex.curModeIndex(),
@@ -320,6 +324,7 @@ export default class Tutorial {
             Notification.message("Randomized a new mode");
             this.vortexLib.Vortex.shortClick(0);
           } else {
+            this.tutorialTree.navigateToState('state-mode-' + this.vortexLib.Vortex.curModeIndex());
             this.vortexLib.Vortex.longClick(0);
             Notification.success("Well done, you successfully randomized a mode");
             this.nextStep();
@@ -337,23 +342,21 @@ export default class Tutorial {
           if (type != 'up') {
             return;
           }
-          if (dur < 250) {
-            this.stepData.clickCounter++;
-            this.vortexLib.Vortex.shortClick(0);
-            if (this.stepData.clickCounter > 3) {
-              Notification.success(``);
-            } else {
-              Notification.message(`Cycled to mode ${(this.stepData.clickCounter) % 6}`);
-            }
-          } else {
-            this.vortexLib.Vortex.longClick(0);
-            Notification.success("Good, you picked the leds to be targeted by the menu");
-            this.nextStep();
+          if (dur >= 250) {
+            Notification.failure("Short click to see where you are");
+            return;
           }
-          if (this.vortexLib.Vortex.curModeIndex() < 4) {
+          this.stepData.clickCounter++;
+          this.vortexLib.Vortex.shortClick(0);
+          const modeIdx = (this.vortexLib.Vortex.curModeIndex() + 1) % 5;
+          this.tutorialTree.navigateToState('state-mode-' + modeIdx);
+          if (this.stepData.clickCounter > 1) {
+            Notification.failure("That's the end of the tutorial for now");
+          } else if (this.stepData.clickCounter > 0) {
+            Notification.success("Notice you're back at the main modes");
+            //this.nextStep();
           } else {
-            this.nextStep();
-            Notification.success(`You successfully cycled all the modes, you're back at the first mode`);
+            Notification.message(`Cycled to mode ${modeIdx + 1}`);
           }
         }
       },
@@ -379,6 +382,7 @@ export default class Tutorial {
       // Desktop: use mousedown/mouseup
       deviceButton.addEventListener('mousedown', (event) => this.handlePressStart(event));
       deviceButton.addEventListener('mouseup', (event) => this.handlePressEnd(event));
+      deviceButton.addEventListener('mouseleave', (event) => this.handlePressEnd(event));
     }
     // Add event listeners for spacebar press and release
     document.addEventListener('keydown', (event) => {
