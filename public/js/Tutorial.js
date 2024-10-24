@@ -400,17 +400,17 @@ export default class Tutorial {
     const tutorialOverlay = document.createElement('div');
     tutorialOverlay.classList.add('tutorial-overlay');
     tutorialOverlay.innerHTML = `
-      <div class="tutorial-content">
+      <div class="tutorial-content" style="text-align: center; position: relative; height: 350px;">  <!-- Adjusted height -->
         <h2 class="tutorial-step-title"></h2>
         <p class="tutorial-step-content"></p>
-        <div class="tutorial-actions">
+        <div class="tutorial-actions" style="position: absolute; top: 60%; left: 50%; transform: translate(-50%, -50%);">  <!-- Adjusted top value -->
           <div id="deviceButton" class="device-button">
             <!-- SVG Circular Progress Bar -->
             <svg class="progress-ring" width="80" height="80">
               <circle class="progress-ring__circle" stroke="#0080ff" stroke-width="6" fill="transparent" r="38" cx="40" cy="40"/>
             </svg>
           </div>
-          <img src="./duo-logo-square-512.png" alt="Duo Logo" style="display: block; margin: 10px auto; width: 80px;"> <!-- Image added here -->
+          <img src="../images/duo-logo-square-512.png" alt="Duo Logo" style="display: block; margin: 10px auto; width: 200px;">  <!-- Adjusted image width -->
         </div>
         <p class="tutorial-error-message" id="errorMessage" style="color:red; display:none;"></p>
         <p class="tutorial-step-number">Step 1 of ${this.steps.length}</p>

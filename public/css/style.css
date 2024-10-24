@@ -90,7 +90,7 @@ body, html {
 }
 
 .device-button {
-  background-color: #808080;
+  background-color: rgba(128, 128, 128, 0.5);
   color: white;
   width: 80px;
   height: 80px;
@@ -103,18 +103,18 @@ body, html {
   justify-content: center;
   align-items: center;
   margin: 0 auto; /* Center horizontally */
-  margin-bottom: 20px; /* Add bottom margin */
+  margin-bottom: 10px; /* Add bottom margin */
   user-select: none; /* Prevent text selection */
   outline: none; /* Prevent focus outlines */
   -webkit-tap-highlight-color: transparent; /* Remove mobile tap highlight */
 }
 
 .device-button-pressed {
-  background-color: #333333 !important; /* Dark green */
+  background-color: rgba(51, 51, 51, 0.5) !important; /* Dark gray */
 }
 
 .device-button:hover {
-  background-color: #555555; /* Darker green on hover */
+  background-color: rgba(85, 85, 85, 0.5); /* Darker gray on hover */
 }
 
 .device-button:active {
