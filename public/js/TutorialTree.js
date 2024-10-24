@@ -89,6 +89,7 @@ export default class TutorialTree {
       const path = this.findStatePath(singleState);
       if (path) {
         this.expandAndActivate(path);
+        this.toggleBranch(singleState);
       } else {
         console.warn(`State ${singleState} not found in the tree.`);
       }

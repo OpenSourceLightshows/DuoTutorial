@@ -404,7 +404,7 @@ export default class Tutorial {
         <h2 class="tutorial-step-title"></h2>
         <p class="tutorial-step-content"></p>
         <div class="tutorial-actions">
-          <img src="../images/duo-tutorial-leds.png" alt="Duo Logo" class="duo-image">
+          <img src="images/duo-tutorial-leds.png" alt="Duo Logo" class="duo-image">
           <div id="deviceButton" class="device-button">
             <!-- SVG Circular Progress Bar -->
             <a class=device-button-text>Press</a>
