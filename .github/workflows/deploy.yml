@@ -85,3 +85,12 @@ jobs:
     - name: Deploy to GitHub Pages
       id: deployment
       uses: actions/deploy-pages@v4
+
+    # Archive the build artifacts
+    - name: Archive VortexLib files
+      uses: actions/upload-artifact@v3
+      with:
+        name: VortexLib-files
+        path: |
+          public/js/VortexLib.js
+          public/js/VortexLib.wasm
