@@ -78,10 +78,19 @@ jobs:
     - name: Setup Pages
       uses: actions/configure-pages@v5
     - name: Upload artifact
-      uses: actions/upload-pages-artifact@v3
+      uses: actions/upload-pages-artifact@v4
       with:
         # Upload public folder
         path: './public'
     - name: Deploy to GitHub Pages
       id: deployment
       uses: actions/deploy-pages@v4
+
+    # Archive the build artifacts
+    - name: Archive VortexLib files
+      uses: actions/upload-artifact@v4
+      with:
+        name: VortexLib-files
+        path: |
+          public/js/VortexLib.js
+          public/js/VortexLib.wasm
