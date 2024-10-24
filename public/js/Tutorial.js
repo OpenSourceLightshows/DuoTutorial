@@ -16,6 +16,7 @@ export default class Tutorial {
     this.stepData = {
       clickCounter: 0,
       curMenu: 'Randomizer',
+      targetLed: 'Both Leds'
     };
 
     this.steps = [
@@ -452,6 +453,11 @@ export default class Tutorial {
 
     this.buttonDown = true; // Mark the button as being pressed
     this.pressStartTime = new Date().getTime(); // Store the press start time
+
+    // Trigger haptic feedback (vibration) on button press
+    if (navigator.vibrate) {
+      navigator.vibrate(50); // Vibrate for 50 milliseconds
+    }
 
     // Trigger the 'down' action for the current step
     this.steps[this.currentStep].action('down');
