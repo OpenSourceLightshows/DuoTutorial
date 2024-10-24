@@ -271,7 +271,7 @@ export default class Tutorial {
           Notification.success("You opened the mode randomizer");
           this.tutorialTree.navigateToState('state-mode-' + this.vortexLib.Vortex.curModeIndex(),
                                             'state-menu-0',
-                                            'state-led-selection');
+                                            'state-led-select');
           this.vortexLib.Vortex.longClick(0);
           this.nextStep();
         }
