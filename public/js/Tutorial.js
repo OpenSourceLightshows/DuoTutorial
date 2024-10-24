@@ -403,7 +403,6 @@ export default class Tutorial {
       <div class="tutorial-content">
         <h2 class="tutorial-step-title"></h2>
         <p class="tutorial-step-content"></p>
-        <p class="tutorial-error-message" id="errorMessage" style="color:red; display:none;"></p>
         <div class="tutorial-actions">
           <div id="deviceButton" class="device-button">
             <!-- SVG Circular Progress Bar -->
@@ -411,7 +410,9 @@ export default class Tutorial {
               <circle class="progress-ring__circle" stroke="#0080ff" stroke-width="6" fill="transparent" r="38" cx="40" cy="40"/>
             </svg>
           </div>
+          <img src="./duo-logo-square-512.png" alt="Duo Logo" style="display: block; margin: 10px auto; width: 80px;"> <!-- Image added here -->
         </div>
+        <p class="tutorial-error-message" id="errorMessage" style="color:red; display:none;"></p>
         <p class="tutorial-step-number">Step 1 of ${this.steps.length}</p>
       </div>
     `;
@@ -424,7 +425,7 @@ export default class Tutorial {
     // Initially set it to full circumference (empty)
     circle.style.strokeDasharray = `${circumference} ${circumference}`;
     circle.style.strokeDashoffset = `${circumference}`;
-  }
+}
 
   handlePressStart(event) {
     if (this.buttonDown) {
