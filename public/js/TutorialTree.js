@@ -6,21 +6,43 @@ export default class TutorialTree {
     // Define the initial map structure with children
     this.map = {
       'state-all': { label: 'Duo Navigation', children: ['state-off', 'state-on'], isExpanded: true},
+
+      // main
       'state-off': { label: 'Off', children: [] },
       'state-on': { label: 'On', children: ['state-mode-0', 'state-mode-1', 'state-mode-2', 'state-mode-3', 'state-mode-4'] },
+
+      // modes
       'state-mode-0': { label: 'Mode 1', children: ['state-menu-0', 'state-menu-1', 'state-menu-2', 'state-menu-3', 'state-menu-4', 'state-menu-5' ] },
       'state-mode-1': { label: 'Mode 2', children: ['state-menu-0', 'state-menu-1', 'state-menu-2', 'state-menu-3', 'state-menu-4', 'state-menu-5' ] },
       'state-mode-2': { label: 'Mode 3', children: ['state-menu-0', 'state-menu-1', 'state-menu-2', 'state-menu-3', 'state-menu-4', 'state-menu-5' ] },
       'state-mode-3': { label: 'Mode 4', children: ['state-menu-0', 'state-menu-1', 'state-menu-2', 'state-menu-3', 'state-menu-4', 'state-menu-5' ] },
       'state-mode-4': { label: 'Mode 5', children: ['state-menu-0', 'state-menu-1', 'state-menu-2', 'state-menu-3', 'state-menu-4', 'state-menu-5' ] },
+
+      // menus
       'state-menu-0': { label: 'Randomizer', children: ['state-led-select', 'state-randomizing'] },
-      'state-menu-1': { label: 'Mode Sharing', children: ['state-led-select'] },
+      'state-menu-1': { label: 'Mode Sharing', children: [] },
       'state-menu-2': { label: 'Color Select', children: ['state-led-select'] },
       'state-menu-3': { label: 'Pattern select', children: ['state-led-select'] },
-      'state-menu-4': { label: 'Global Brightness', children: ['state-led-select'] },
-      'state-menu-5': { label: 'Factory Reset', children: ['state-led-select'] },
+      'state-menu-4': { label: 'Global Brightness', children: [] },
+      'state-menu-5': { label: 'Factory Reset', children: [] },
+
+      // most menus have led select
       'state-led-select': { label: 'Led Selection' },
+
+      // randomizer
       'state-randomizing': { label: 'Randomizing' },
+
+      // color select
+      'state-color-select': { label: 'Randomizing' },
+
+      // pattern select
+      'state-pattern-select': { label: 'Randomizing' },
+
+      // global brightness
+      'state-global-brightness': { label: 'Randomizing' },
+
+      // factory reset
+      'state-factory-reset': { label: 'Randomizing' },
     };
 
     this.initMap();

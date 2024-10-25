@@ -289,7 +289,7 @@ export default class Lightshow {
       }
 
       leds.forEach((col, index) => {
-        let radius = this.radius + (index * this.spread);
+        let radius = this.radius + ((2 - index) * this.spread);
         const x = centerX + radius * Math.cos(this.angle);
         const y = centerY + radius * Math.sin(this.angle);
         if (!col) {
@@ -346,7 +346,7 @@ export default class Lightshow {
       }
 
       leds.forEach((col, index) => {
-        const boxSize = baseBoxSize + index * this.spread;  // Actual size of the square for this LED
+        const boxSize = this.radius + index * this.spread;  // Actual size of the square for this LED
         const halfBoxSize = boxSize / 2;
         const fullPerimeter = 4 * boxSize;  // Total perimeter of the square
 
@@ -385,7 +385,6 @@ export default class Lightshow {
   feedFigure8Points() {
     const centerX = (this.canvas.width / 2);
     const centerY = this.canvas.height / 2;
-    let baseRadius = Math.min(centerX, centerY) - (500 - parseInt(this.radius));
 
     for (let i = 0; i < this.tickRate; i++) {
       const leds = this.vortexLib.Tick();
@@ -404,7 +403,7 @@ export default class Lightshow {
       }
 
       leds.forEach((col, index) => {
-        let radius = baseRadius + index * this.spread; // Adjust this value to control the distance between rings
+        let radius = this.radius + index * this.spread; // Adjust this value to control the distance between rings
         const x = centerX + (radius * Math.sin(this.angle)) / (1 + Math.cos(this.angle) * Math.cos(this.angle));
         const y = centerY + (radius * Math.sin(this.angle) * Math.cos(this.angle)) / (1 + Math.cos(this.angle) * Math.cos(this.angle));
         if (!col) {

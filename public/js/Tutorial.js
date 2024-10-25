@@ -351,16 +351,116 @@ export default class Tutorial {
           this.vortexLib.Vortex.shortClick(0);
           const modeIdx = (this.vortexLib.Vortex.curModeIndex() + 1) % 5;
           this.tutorialTree.navigateToState('state-mode-' + modeIdx);
-          if (this.stepData.clickCounter > 1) {
-            Notification.failure("That's the end of the tutorial for now");
-          } else if (this.stepData.clickCounter > 0) {
+          if (this.stepData.clickCounter > 0) {
             Notification.success("Notice you're back at the main modes");
-            //this.nextStep();
+            this.nextStep();
           } else {
             Notification.message(`Cycled to mode ${modeIdx + 1}`);
           }
         }
       },
+      // ================================================================================
+      {
+        title: "Enter Any Menu",
+        content: "Pick a mode and enter menus",
+        buttonTime: 0.25,
+        prepare: () => {
+          this.lightshow.toggleEnabled();
+          this.tutorialTree.navigateToState('state-mode-' + this.vortexLib.Vortex.curModeIndex());
+        },
+        action: (type, dur) => {
+          if (type === 'down') {
+            // Call an action at 500ms
+            const hold500ms = setTimeout(() => {
+              this.lightshow.setEnabled(false);
+            }, 500);
+
+            // Call another action at 1250ms
+            const hold1250ms = setTimeout(() => {
+              this.lightshow.setEnabled(true);
+              this.vortexLib.Vortex.menuEnterClick(0);
+            }, 1250);
+
+            // Store timeouts to clear them on early release
+            this.holdTimeouts.push(hold500ms, hold1250ms);
+          } else if (type === 'up') {
+            if (dur < 1250) {
+              // Clear any remaining timeouts
+              this.holdTimeouts.forEach(timeout => clearTimeout(timeout));
+              this.holdTimeouts = []; // Reset the timeouts
+
+              if (dur < 250) {
+                Notification.message("You can open the menus from any mode");
+                this.vortexLib.Vortex.shortClick(0);
+                this.tutorialTree.navigateToState('state-mode-' + (++this.stepData.clickCounter % 5));
+              } else if (dur < 500) {
+                Notification.failure("You released the button much too soon");
+              } else if (dur >= 500) {
+                Notification.failure("You need to hold the button for longer");
+              }
+
+              // re-enable it because they might have turned it off, don't open the menus for them either
+              this.lightshow.setEnabled(true);
+            } else {
+              this.tutorialTree.navigateToState('state-mode-' + (this.stepData.clickCounter % 5), 'state-menu-0');
+              Notification.success("Success, you entered the menus");
+              this.nextStep(); // Move to the next step if held correctly
+            }
+          }
+        }
+      },
+
+      // ================================================================================
+      {
+        title: "Pick a Menu",
+        content: () => `Pick a menu to learn about, this is the ${this.stepData.curMenu} menu`,
+        buttonTime: 1.25,
+        prepare: () => {
+          this.lightshow.setEnabled(true);
+        },
+        action: (type, dur) => {
+          if (type === 'down') {
+            // Call an action at 500ms
+            const hold500ms = setTimeout(() => {
+              this.lightshow.setEnabled(false);
+            }, 500);
+
+            // Call another action at 1250ms
+            const hold1250ms = setTimeout(() => {
+              this.lightshow.setEnabled(true);
+              this.vortexLib.Vortex.menuEnterClick(0);
+            }, 1250);
+
+            // Store timeouts to clear them on early release
+            this.holdTimeouts.push(hold500ms, hold1250ms);
+          } else if (type === 'up') {
+            if (dur < 1250) {
+              // Clear any remaining timeouts
+              this.holdTimeouts.forEach(timeout => clearTimeout(timeout));
+              this.holdTimeouts = []; // Reset the timeouts
+
+              if (dur < 250) {
+                Notification.message("You can open the menus from any mode");
+                this.vortexLib.Vortex.shortClick(0);
+                this.tutorialTree.navigateToState('state-mode-' + (++this.stepData.clickCounter % 5));
+              } else if (dur < 500) {
+                Notification.failure("You released the button much too soon");
+              } else if (dur >= 500) {
+                Notification.failure("You need to hold the button for longer");
+              }
+
+              // re-enable it because they might have turned it off, don't open the menus for them either
+              this.lightshow.setEnabled(true);
+            } else {
+              this.tutorialTree.navigateToState('state-mode-' + (this.stepData.clickCounter % 5), 'state-menu-0');
+              Notification.success("Success, you entered the menus");
+              this.nextStep(); // Move to the next step if held correctly
+            }
+          }
+        }
+      },
+
+
     ];
   }
 
@@ -372,6 +472,9 @@ export default class Tutorial {
       this.steps[this.currentStep].prepare();
     }
     this.updateTutorialStep(this.currentStep);
+
+    // skip to a step
+    //this.gotoStep('Enter Any Menu', true);
 
     // disable duoImage context menu
     const duoImage  = document.querySelector('.duo-image');
@@ -543,6 +646,20 @@ export default class Tutorial {
       this.updateTutorialStep(this.currentStep);
       // reset this
       this.stepData.clickCounter = 0;
+    }
+  }
+
+  gotoStep(stepTitle, prepare = false) {
+    const stepIndex = this.steps.findIndex(step => step.title === stepTitle);
+    if (stepIndex !== -1) {
+      this.currentStep = stepIndex;
+      this.updateTutorialStep(stepIndex);
+      if (prepare) {
+        this.steps[stepIndex].prepare();
+      }
+      this.stepData.clickCounter = 0; // Reset click counter for the new step
+    } else {
+      console.error(`Step with title "${stepTitle}" not found.`);
     }
   }
 }
