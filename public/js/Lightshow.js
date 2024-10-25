@@ -15,7 +15,7 @@ export default class Lightshow {
     const rect = this.canvas.getBoundingClientRect();
     this.canvas.width = rect.width;  // Set the canvas internal width to match the displayed size
     this.canvas.height = rect.height;  // Set the canvas internal height to match the displayed size
-    this.radius = ((this.canvas.width > this.canvas.height) ? this.canvas.height : this.canvas.width) / 3;
+    this.radius = ((this.canvas.width > this.canvas.height) ? this.canvas.height : this.canvas.width) / 4;
     this.tickRate = 2;
     this.trailSize = 150;
     this.spread = 25;

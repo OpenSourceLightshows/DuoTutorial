@@ -163,12 +163,11 @@ export default class Tutorial {
           }
           this.vortexLib.Vortex.shortClick(0);
           this.stepData.clickCounter++;
-          this.tutorialTree.navigateToState('state-mode-' + (this.stepData.clickCounter % 5));
+          this.tutorialTree.navigateToState('state-mode-' + (this.vortexLib.Vortex.curModeIndex() + 1) % 5);
           if (this.vortexLib.Vortex.curModeIndex() < 4) {
             Notification.message(`Cycled to mode ${(this.stepData.clickCounter + 1) % 6}`);
           } else {
             Notification.success(`You've successfully cycled through all the modes and returned to the first mode.`);
-            this.tutorialTree.navigateToState('state-mode-0');
             this.nextStep();
           }
         }
@@ -205,7 +204,7 @@ export default class Tutorial {
               if (dur < 250) {
                 Notification.message("You can open the menus from any mode");
                 this.vortexLib.Vortex.shortClick(0);
-                this.tutorialTree.navigateToState('state-mode-' + (++this.stepData.clickCounter % 5));
+                this.tutorialTree.navigateToState('state-mode-' + (this.vortexLib.Vortex.curModeIndex() + 1) % 5);
               } else if (dur < 500) {
                 Notification.failure("You released the button much too soon");
               } else if (dur >= 500) {
@@ -215,7 +214,7 @@ export default class Tutorial {
               // re-enable it because they might have turned it off, don't open the menus for them either
               this.lightshow.setEnabled(true);
             } else {
-              this.tutorialTree.navigateToState('state-mode-' + (this.stepData.clickCounter % 5), 'state-menu-0');
+              this.tutorialTree.navigateToState('state-mode-' + this.vortexLib.Vortex.curModeIndex(), 'state-menu-0');
               Notification.success("Success, you entered the menus");
               this.nextStep(); // Move to the next step if held correctly
             }
@@ -277,10 +276,13 @@ export default class Tutorial {
           this.nextStep();
         }
       },
+
+      // ================================================================================
+      //  Randomizer Menu
       // ================================================================================
       {
-        title: "Select Leds",
-        content: () => `<b>Short click</b> to pick which leds will be targeted, <b>long click</b> to select those leds<br>Targeting: ${this.stepData.targetLed}`,
+        title: "Randomizer Menu",
+        content: () => `First, <b>short click</b> to pick which leds will be targeted, then <b>long click</b> to choose those leds<br>Targeting: ${this.stepData.targetLed}`,
         buttonTime: 0.25,
         prepare: () => {
         },
@@ -332,6 +334,9 @@ export default class Tutorial {
           }
         }
       },
+
+      // ================================================================================
+      //  Begin Main Loop
       // ================================================================================
       {
         title: "Understand Where You Are",
@@ -363,7 +368,7 @@ export default class Tutorial {
       {
         title: "Enter Any Menu",
         content: "Pick a mode and enter menus",
-        buttonTime: 0.25,
+        buttonTime: 1.25,
         prepare: () => {
           this.lightshow.toggleEnabled();
           this.tutorialTree.navigateToState('state-mode-' + this.vortexLib.Vortex.curModeIndex());
@@ -392,7 +397,7 @@ export default class Tutorial {
               if (dur < 250) {
                 Notification.message("You can open the menus from any mode");
                 this.vortexLib.Vortex.shortClick(0);
-                this.tutorialTree.navigateToState('state-mode-' + (++this.stepData.clickCounter % 5));
+                this.tutorialTree.navigateToState('state-mode-' + (this.vortexLib.Vortex.curModeIndex() + 1) % 5);
               } else if (dur < 500) {
                 Notification.failure("You released the button much too soon");
               } else if (dur >= 500) {
@@ -402,7 +407,8 @@ export default class Tutorial {
               // re-enable it because they might have turned it off, don't open the menus for them either
               this.lightshow.setEnabled(true);
             } else {
-              this.tutorialTree.navigateToState('state-mode-' + (this.stepData.clickCounter % 5), 'state-menu-0');
+              this.tutorialTree.navigateToState('state-mode-' + this.vortexLib.Vortex.curModeIndex(),
+                                                'state-menu-0');
               Notification.success("Success, you entered the menus");
               this.nextStep(); // Move to the next step if held correctly
             }
@@ -414,48 +420,130 @@ export default class Tutorial {
       {
         title: "Pick a Menu",
         content: () => `Pick a menu to learn about, this is the ${this.stepData.curMenu} menu`,
-        buttonTime: 1.25,
+        buttonTime: 0.25,
         prepare: () => {
           this.lightshow.setEnabled(true);
         },
         action: (type, dur) => {
-          if (type === 'down') {
-            // Call an action at 500ms
-            const hold500ms = setTimeout(() => {
-              this.lightshow.setEnabled(false);
-            }, 500);
-
-            // Call another action at 1250ms
-            const hold1250ms = setTimeout(() => {
-              this.lightshow.setEnabled(true);
-              this.vortexLib.Vortex.menuEnterClick(0);
-            }, 1250);
-
-            // Store timeouts to clear them on early release
-            this.holdTimeouts.push(hold500ms, hold1250ms);
-          } else if (type === 'up') {
-            if (dur < 1250) {
-              // Clear any remaining timeouts
-              this.holdTimeouts.forEach(timeout => clearTimeout(timeout));
-              this.holdTimeouts = []; // Reset the timeouts
-
-              if (dur < 250) {
-                Notification.message("You can open the menus from any mode");
-                this.vortexLib.Vortex.shortClick(0);
-                this.tutorialTree.navigateToState('state-mode-' + (++this.stepData.clickCounter % 5));
-              } else if (dur < 500) {
-                Notification.failure("You released the button much too soon");
-              } else if (dur >= 500) {
-                Notification.failure("You need to hold the button for longer");
+          if (type !== 'up') {
+            return;
+          }
+          if (dur < 250) {
+            Notification.message("You can open the menus from any mode");
+            this.vortexLib.Vortex.shortClick(0);
+            const curMenuID = (this.vortexLib.Menus.curMenuID().value + 1) % 6;
+            this.tutorialTree.navigateToState('state-mode-' + this.vortexLib.Vortex.curModeIndex(),
+              'state-menu-' + curMenuID);
+            this.stepData.curMenu = (() => {
+              switch (curMenuID) {
+                case 0: return 'Randomizer';
+                case 1: return 'Mode Sharing';
+                case 2: return 'Color Select';
+                case 3: return 'Pattern Select';
+                case 4: return 'Global Brightness';
+                case 5: return 'Factory Reset';
+                default: return 'Unknown';
               }
+            })();
+          } else {
+            const curMenuID = this.vortexLib.Menus.curMenuID().value;
+            Notification.success(`Success, you entered the ${this.stepData.curMenu} menu`);
+            this.tutorialTree.navigateToState('state-mode-' + this.vortexLib.Vortex.curModeIndex(),
+              'state-menu-' + curMenuID);
+            this.vortexLib.Vortex.longClick(0);
+            this.gotoStep(`${this.stepData.curMenu} Menu`);
+          }
+        }
+      },
 
-              // re-enable it because they might have turned it off, don't open the menus for them either
-              this.lightshow.setEnabled(true);
-            } else {
-              this.tutorialTree.navigateToState('state-mode-' + (this.stepData.clickCounter % 5), 'state-menu-0');
-              Notification.success("Success, you entered the menus");
-              this.nextStep(); // Move to the next step if held correctly
-            }
+      // ================================================================================
+      //  Mode Sharing Menu
+      // ================================================================================
+      {
+        title: "Mode Sharing Menu",
+        content: () => `The Mode Sharing menu facilitates sending or receiving modes to/from another Duo, the Duo is in receiver mode, <b>short click</b> to send the current mode and <b>long click</b> to leave the menu`,
+        buttonTime: 0.25,
+        prepare: () => {
+        },
+        action: (type, dur) => {
+          if (type != 'up') {
+            return;
+          }
+          if (dur < 250) {
+            Notification.message("Sending the mode...");
+            this.tutorialTree.navigateToState('state-mode-' + this.vortexLib.Vortex.curModeIndex(),
+                                              'state-menu-1',
+                                              'state-mode-sharing-send');
+            const hold500ms = setTimeout(() => {
+              Notification.message("Done Sending");
+              this.tutorialTree.navigateToState('state-mode-' + this.vortexLib.Vortex.curModeIndex(),
+                                                'state-menu-1',
+                                                'state-mode-sharing-receive');
+            }, 2000);
+            this.vortexLib.Vortex.shortClick(0);
+          } else {
+            Notification.success("Leaving the menu");
+            this.tutorialTree.navigateToState('state-mode-' + this.vortexLib.Vortex.curModeIndex());
+            this.vortexLib.Vortex.longClick(0);
+            this.gotoStep('Understand Where You Are');
+          }
+        }
+      },
+
+      // ================================================================================
+      //  Color Select Menu
+      // ================================================================================
+      {
+        title: "Color Select Menu",
+        content: () => `First, <b>short click</b> to pick which leds will be targeted, then <b>long click</b> to choose those leds<br>Targeting: ${this.stepData.targetLed}`,
+        buttonTime: 0.25,
+        prepare: () => {
+        },
+        action: (type, dur) => {
+          if (type != 'up') {
+            return;
+          }
+          const options = [
+            'Both Leds',
+            'Tip Led',
+            'Top Led'
+          ];
+          // target is current click count option
+          this.stepData.targetLed = options[this.stepData.clickCounter % 3];
+          if (dur < 250) {
+            // unless they click the re-assign target
+            this.stepData.targetLed = options[++this.stepData.clickCounter % 3];
+            Notification.message("Selected " + this.stepData.targetLed);
+            this.vortexLib.Vortex.shortClick(0);
+          } else {
+            this.tutorialTree.navigateToState('state-mode-' + this.vortexLib.Vortex.curModeIndex(),
+                                              'state-menu-2',
+                                              'state-randomizing');
+            this.vortexLib.Vortex.longClick(0);
+            Notification.success("Good, you picked the leds to be targeted by the menu");
+            this.nextStep();
+          }
+        }
+      },
+      // ================================================================================
+      {
+        title: "Pick a Color Slot",
+        content: "<b>Short click</b> to cycle through the colors of this mode, <b>long click</b> to edit a color",
+        buttonTime: 0.25,
+        prepare: () => {
+        },
+        action: (type, dur) => {
+          if (type != 'up') {
+            return;
+          }
+          if (dur < 250) {
+            Notification.message("Randomized a new mode");
+            this.vortexLib.Vortex.shortClick(0);
+          } else {
+            this.tutorialTree.navigateToState('state-mode-' + this.vortexLib.Vortex.curModeIndex());
+            this.vortexLib.Vortex.longClick(0);
+            Notification.success("Well done, you successfully randomized a mode");
+            this.nextStep();
           }
         }
       },

@@ -8,11 +8,11 @@ export default class TutorialTree {
       'state-all': { label: 'Duo Navigation', children: ['state-off', 'state-on'], isExpanded: true},
 
       // main
-      'state-off': { label: 'Off', children: [] },
-      'state-on': { label: 'On', children: ['state-mode-0', 'state-mode-1', 'state-mode-2', 'state-mode-3', 'state-mode-4'] },
+      'state-off': { label: 'Off', title: 'Device is Off', children: [] },
+      'state-on': { label: 'On', title: 'Device is On', children: ['state-mode-0', 'state-mode-1', 'state-mode-2', 'state-mode-3', 'state-mode-4'] },
 
       // modes
-      'state-mode-0': { label: 'Mode 1', children: ['state-menu-0', 'state-menu-1', 'state-menu-2', 'state-menu-3', 'state-menu-4', 'state-menu-5' ] },
+      'state-mode-0': { label: 'Mode 1', title: 'Device is playing Mode 1', children: ['state-menu-0', 'state-menu-1', 'state-menu-2', 'state-menu-3', 'state-menu-4', 'state-menu-5' ] },
       'state-mode-1': { label: 'Mode 2', children: ['state-menu-0', 'state-menu-1', 'state-menu-2', 'state-menu-3', 'state-menu-4', 'state-menu-5' ] },
       'state-mode-2': { label: 'Mode 3', children: ['state-menu-0', 'state-menu-1', 'state-menu-2', 'state-menu-3', 'state-menu-4', 'state-menu-5' ] },
       'state-mode-3': { label: 'Mode 4', children: ['state-menu-0', 'state-menu-1', 'state-menu-2', 'state-menu-3', 'state-menu-4', 'state-menu-5' ] },
@@ -20,7 +20,7 @@ export default class TutorialTree {
 
       // menus
       'state-menu-0': { label: 'Randomizer', children: ['state-led-select', 'state-randomizing'] },
-      'state-menu-1': { label: 'Mode Sharing', children: [] },
+      'state-menu-1': { label: 'Mode Sharing', children: ['state-mode-sharing-receive', 'state-mode-sharing-send'] },
       'state-menu-2': { label: 'Color Select', children: ['state-led-select'] },
       'state-menu-3': { label: 'Pattern select', children: ['state-led-select'] },
       'state-menu-4': { label: 'Global Brightness', children: [] },
@@ -31,6 +31,10 @@ export default class TutorialTree {
 
       // randomizer
       'state-randomizing': { label: 'Randomizing' },
+
+      // mode sharing
+      'state-mode-sharing-receive': { label: 'Listening for Modes' },
+      'state-mode-sharing-send': { label: 'Sending Mode' },
 
       // color select
       'state-color-select': { label: 'Randomizing' },
@@ -54,6 +58,14 @@ export default class TutorialTree {
     const treeContainer = document.createElement('div');
     treeContainer.id = 'tutorialTree';
     document.body.appendChild(treeContainer);
+
+    const tutorialTitleDiv = document.createElement('div');
+    tutorialTitleDiv.id = 'tutorialTitleContainer';
+    const tutorialTitle = document.createElement('label');
+    tutorialTitle.id = 'tutorialTitle';
+    tutorialTitle.innerHTML = this.map['state-off'].title; // Clear the existing tree
+    tutorialTitleDiv.appendChild(tutorialTitle);
+    document.body.appendChild(tutorialTitleDiv);
 
     // Create the tree structure
     this.renderMap(treeContainer, 'state-all', 0);
@@ -230,6 +242,9 @@ export default class TutorialTree {
     const treeContainer = document.getElementById('tutorialTree');
     treeContainer.innerHTML = ''; // Clear the existing tree
     this.renderMap(treeContainer, 'state-all', 0);
+
+    const tutorialTitle = document.getElementById('tutorialTitle');
+    tutorialTitle.innerHTML = this.map[targetNodeId].title; // Clear the existing tree
 
     // Set the current state and mark it as active (select the target node)
     this.updateActiveState(targetNodeId);
