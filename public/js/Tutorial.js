@@ -16,7 +16,8 @@ export default class Tutorial {
     this.stepData = {
       clickCounter: 0,
       curMenu: 'Randomizer',
-      targetLed: 'Both Leds'
+      targetLed: 'Both Leds',
+      colSlot: 0,
     };
 
     this.steps = [
@@ -531,13 +532,16 @@ export default class Tutorial {
         content: "<b>Short click</b> to cycle through the colors of this mode, <b>long click</b> to edit a color",
         buttonTime: 0.25,
         prepare: () => {
+          this.lightshow.toggleEnabled();
+          this.tutorialTree.navigateToState('state-mode-' + this.vortexLib.Vortex.curModeIndex());
         },
         action: (type, dur) => {
           if (type != 'up') {
             return;
           }
           if (dur < 250) {
-            Notification.message("Randomized a new mode");
+            // add 1 for readability
+            Notification.message("Selected color slot #" + this.stepData.colSlot + 1);
             this.vortexLib.Vortex.shortClick(0);
           } else {
             this.tutorialTree.navigateToState('state-mode-' + this.vortexLib.Vortex.curModeIndex());
@@ -563,6 +567,7 @@ export default class Tutorial {
 
     // skip to a step
     //this.gotoStep('Enter Any Menu', true);
+    //this.gotoStep('Pick a Color Slot', true);
 
     // disable duoImage context menu
     const duoImage  = document.querySelector('.duo-image');
@@ -584,6 +589,10 @@ export default class Tutorial {
     document.addEventListener('keydown', (event) => {
       if (event.code === 'Space') {
         this.handlePressStart(event);
+        // Trigger haptic feedback (vibration) on button press
+        if (navigator.vibrate) {
+          navigator.vibrate(50); // Vibrate for 50 milliseconds
+        }
         event.preventDefault(); // Prevent default spacebar behavior (scrolling down the page)
       }
     });
@@ -648,11 +657,6 @@ export default class Tutorial {
 
     this.buttonDown = true; // Mark the button as being pressed
     this.pressStartTime = new Date().getTime(); // Store the press start time
-
-    // Trigger haptic feedback (vibration) on button press
-    if (navigator.vibrate) {
-      navigator.vibrate(50); // Vibrate for 50 milliseconds
-    }
 
     // Trigger the 'down' action for the current step
     this.steps[this.currentStep].action('down');
