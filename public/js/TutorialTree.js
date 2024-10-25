@@ -224,6 +224,7 @@ export default class TutorialTree {
   // Expand and activate the node and its parent path
   expandAndActivate(statePath, previousPath = null) {
     const targetNodeId = statePath[statePath.length - 1]; // The final target node we're navigating to
+    const curNode = this.map[targetNodeId];
 
     // Collapse unrelated parents if we have a previous path
     if (previousPath) {
@@ -237,7 +238,7 @@ export default class TutorialTree {
     });
 
     // Ensure the target node is not expanded but is selected (active)
-    this.map[targetNodeId].isExpanded = false; // Don't expand the target node unless explicitly navigated inside
+    curNode.isExpanded = false; // Don't expand the target node unless explicitly navigated inside
 
     // Re-render the tree after adjusting the parent expansions
     const treeContainer = document.getElementById('tutorialTree');
@@ -245,7 +246,7 @@ export default class TutorialTree {
     this.renderMap(treeContainer, 'state-all', 0);
 
     const tutorialTitle = document.getElementById('tutorialTitle');
-    tutorialTitle.innerHTML = this.map[targetNodeId].title; // Clear the existing tree
+    tutorialTitle.innerHTML = ('title' in curNode) ? curNode.title : '';
 
     // Set the current state and mark it as active (select the target node)
     this.updateActiveState(targetNodeId);
