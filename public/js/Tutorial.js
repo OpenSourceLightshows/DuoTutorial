@@ -711,7 +711,7 @@ export default class Tutorial {
     const step = this.steps[stepIndex];
     document.querySelector('.tutorial-step-title').textContent = `${step.title}`;
     let content = (typeof step.content === 'function') ? step.content() : step.content;
-    document.querySelector('.tutorial-step-content').innerHTML = content; 
+    document.querySelector('.tutorial-step-content').innerHTML = "<span>" + content + "</span>"; 
     document.querySelector('.tutorial-step-number').textContent = `${stepIndex + 1}`;
   }
 

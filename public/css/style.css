@@ -39,12 +39,14 @@ body, html {
 }
 
 .tutorial-content {
+  display: flex;
+  flex-direction: column;
   position: relative;
-  height: 350px;
   max-width: 800px;
   width: 100%;
   text-align: center;
   color: #fff;
+  margin: 0 auto;
 }
 
 .tutorial-step-title {
@@ -55,12 +57,15 @@ body, html {
 }
 
 .tutorial-step-content {
-  line-height: 1.5em; /* Adjust line height as needed */
-  min-height: 3em;    /* 2 lines of text = 2 * line-height */
-  align-items: center; /* Vertically center text within the area */
+  line-height: 1.5em;
+  min-height: 6em;
   font-family: 'Roboto', sans-serif;
   font-size: 22px;
   margin-bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: none;
 }
 
 .tutorial-step-number {
@@ -188,8 +193,11 @@ body, html {
 
 .tutorial-actions {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
+  flex: 1;
+  gap: 10px;
 }
 
 .tutorial-actions button {
