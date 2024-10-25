@@ -63,7 +63,8 @@ export default class TutorialTree {
     tutorialTitleDiv.id = 'tutorialTitleContainer';
     const tutorialTitle = document.createElement('label');
     tutorialTitle.id = 'tutorialTitle';
-    tutorialTitle.innerHTML = this.map['state-off'].title; // Clear the existing tree
+    const startNode = this.map['state-off'];
+    tutorialTitle.innerHTML = ('title' in startNode) ? startNode.title : '';
     tutorialTitleDiv.appendChild(tutorialTitle);
     document.body.appendChild(tutorialTitleDiv);
 
