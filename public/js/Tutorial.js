@@ -24,7 +24,7 @@ export default class Tutorial {
       //// ================================================================================
       //{
       //  title: "Short Clicks",
-      //  content: "Let's start with basic input. A <b>Short Click</b> is simply a normal click. Perform a <b>Short Click</b> on the button below",
+      //  content: "Let's start with basic input. A Short Click is simply a normal click. Perform a Short Click on the button below",
       //  prepare: () => {
       //    // run stuff to prepare the step if necessary
       //  },
@@ -43,7 +43,7 @@ export default class Tutorial {
       //// ================================================================================
       //{
       //  title: "Long Clicks",
-      //  content: "Now, try a <b>Long Click</b> by holding the button for about 1 second",
+      //  content: "Now, try a Long Click by holding the button for about 1 second",
       //  buttonTime: 0.25,
       //  action: (type, dur) => {
       //    if (type != 'up') {
@@ -61,8 +61,8 @@ export default class Tutorial {
       //// ================================================================================
       //{
       //  title: "Holds",
-      //  content: "The last way to press the button is by <b>holding</b> for an extended duration. " +
-      //           "Try <b>holding</b> the button for 1.25 seconds",
+      //  content: "The last way to press the button is by holding for an extended duration. " +
+      //           "Try holding the button for 1.25 seconds",
       //  buttonTime: 1.25,
       //  action: (type, dur) => {
       //    if (type != 'up') {
@@ -79,7 +79,7 @@ export default class Tutorial {
       // ================================================================================
       {
         title: "Turning On",
-        content: () => `Turn on the Duo with a <b>short click</b>.`,
+        content: () => `Turn on the Duo with a short click.`,
         action: (type, dur) => {
           if (type != 'up') {
             return;
@@ -97,7 +97,7 @@ export default class Tutorial {
       // ================================================================================
       {
         title: "Turning Off",
-        content: () => `Hold for half a second and release when the led is off to <b>turn the Duo off</b>`,
+        content: () => `Hold for half a second and release when the led is off to turn the Duo off`,
         buttonTime: 0.5,
         action: (type, dur) => {
           if (type === 'down') {
@@ -135,7 +135,7 @@ export default class Tutorial {
       // ================================================================================
       {
         title: "Turn back On",
-        content: () => `Turn the Duo back on with a <b>short click</b> to continue.`,
+        content: () => `Turn the Duo back on with a short click to continue.`,
         action: (type, dur) => {
           if (type != 'up') {
             return;
@@ -153,7 +153,7 @@ export default class Tutorial {
       // ================================================================================
       {
         title: "Cycling Modes",
-        content: () => `<b>Short click</b> to cycle through the available modes.<br>${(this.stepData.clickCounter > 0) ? `Current Mode: ${this.stepData.clickCounter + 1} / 5` : ``}`,
+        content: () => `Short click to cycle through the available modes.<br>${(this.stepData.clickCounter > 0) ? `Current Mode: ${this.stepData.clickCounter + 1} / 5` : ``}`,
         action: (type, dur) => {
           if (type != 'up') {
             return;
@@ -176,7 +176,7 @@ export default class Tutorial {
       // ================================================================================
       {
         title: "Opening Menus",
-        content: "Pick a mode then <b>hold past off</b> till the <b>LEDs flash white</b>. The menus will only affect that specific mode",
+        content: "Pick a mode then hold past off till the LEDs flash white. The menus will only affect that specific mode",
         buttonTime: 1.25,
         prepare: () => {
           this.lightshow.setEnabled(true);
@@ -259,7 +259,7 @@ export default class Tutorial {
       // ================================================================================
       {
         title: "Enter the Randomizer",
-        content: "Next, <b>Long click</b> to enter the Randomizer Menu",
+        content: "Next, Long click to enter the Randomizer Menu",
         buttonTime: 0.25,
         action: (type, dur) => {
           if (type != 'up') {
@@ -283,7 +283,7 @@ export default class Tutorial {
       // ================================================================================
       {
         title: "Randomizer Menu",
-        content: () => `First, <b>short click</b> to pick which leds will be targeted, then <b>long click</b> to choose those leds<br>Targeting: ${this.stepData.targetLed}`,
+        content: () => `First, short click to pick which leds will be targeted, then long click to choose those leds<br>Targeting: ${this.stepData.targetLed}`,
         buttonTime: 0.25,
         prepare: () => {
         },
@@ -316,7 +316,7 @@ export default class Tutorial {
       // ================================================================================
       {
         title: "Randomize a New Mode",
-        content: "<b>Short click</b> unlimited times to roll new random patterns and colorsets on the chosen leds. <b>Long click</b> to save the selected mode and exit",
+        content: "Short click unlimited times to roll new random patterns and colorsets on the chosen leds. Long click to save the selected mode and exit",
         buttonTime: 0.25,
         prepare: () => {
         },
@@ -341,7 +341,7 @@ export default class Tutorial {
       // ================================================================================
       {
         title: "Understand Where You Are",
-        content: "After editing a mode, the changes are saved, and the menu is closed. <b>Short click</b> to see that you're back on the main modes list",
+        content: "After editing a mode, the changes are saved, and the menu is closed. Short click to see that you're back on the main modes list",
         buttonTime: 0.25,
         prepare: () => {
         },
@@ -462,7 +462,7 @@ export default class Tutorial {
       // ================================================================================
       {
         title: "Mode Sharing Menu",
-        content: () => `The Mode Sharing menu facilitates sending or receiving modes to/from another Duo, the Duo is in receiver mode, <b>short click</b> to send the current mode and <b>long click</b> to leave the menu`,
+        content: () => `The Mode Sharing menu facilitates sending or receiving modes to/from another Duo, the Duo is in receiver mode, short click to send the current mode and long click to leave the menu`,
         buttonTime: 0.25,
         prepare: () => {
         },
@@ -496,7 +496,7 @@ export default class Tutorial {
       // ================================================================================
       {
         title: "Color Select Menu",
-        content: () => `First, <b>short click</b> to pick which leds will be targeted, then <b>long click</b> to choose those leds<br>Targeting: ${this.stepData.targetLed}`,
+        content: () => `First, short click to pick which leds will be targeted, then long click to choose those leds<br>Targeting: ${this.stepData.targetLed}`,
         buttonTime: 0.25,
         prepare: () => {
         },
@@ -529,7 +529,7 @@ export default class Tutorial {
       // ================================================================================
       {
         title: "Pick a Color Slot",
-        content: "<b>Short click</b> to cycle through the colors of this mode, <b>long click</b> to edit a color",
+        content: "Short click to cycle through the colors of this mode, long click to edit a color",
         buttonTime: 0.25,
         prepare: () => {
           this.lightshow.toggleEnabled();
@@ -566,7 +566,7 @@ export default class Tutorial {
     this.updateTutorialStep(this.currentStep);
 
     // skip to a step
-    //this.gotoStep('Enter Any Menu', true);
+    //this.gotoStep('Mode Sharing Menu', true);
     //this.gotoStep('Pick a Color Slot', true);
 
     // disable duoImage context menu
@@ -613,40 +613,39 @@ export default class Tutorial {
         <h2 class="tutorial-step-title"></h2>
         <p class="tutorial-step-content"></p>
         <div class="tutorial-actions">
-          <img src="images/duo-tutorial-leds.png" alt="Duo Logo" class="duo-image">
-          <div id="deviceButton" class="device-button">
-            <!-- SVG Circular Progress Bar -->
-            <a class=device-button-text>Press</a>
-            <svg class="progress-ring" width="64" height="64">
-              <circle class="progress-ring__circle" stroke="#0080ff" stroke-width="6" fill="transparent" r="28" cx="32" cy="32"/>
-            </svg>
+          <div class="image-container">
+            <canvas id="ledLightshowCanvas"></canvas>
+            <img src="images/duo-tutorial-leds.png" alt="Duo Logo" class="duo-image">
+            <div id="deviceButton" class="device-button">
+              <!-- SVG Circular Progress Bar -->
+              <a class=device-button-text>Press</a>
+              <svg class="progress-ring" viewBox="0 0 64 64" width="64" height="64">
+                <circle class="progress-ring__circle" stroke="#0080ff" stroke-width="6" fill="transparent" r="28" cx="32" cy="32"/>
+              </svg>
+            </div>
           </div>
-          <p class="tutorial-step-number">1</p>
         </div>
+        <p class="tutorial-step-number">1</p>
       </div>
     `;
     document.body.appendChild(tutorialOverlay);
 
-    // Get the duo-image element to match the size
-    const deviceButton = tutorialOverlay.querySelector('.device-button');
+    // need to assign this member
+    this.ledCanvas = document.getElementById('ledLightshowCanvas');
 
-
-    this.ledCanvasContainer = document.createElement('div');
-    this.ledCanvasContainer.id = 'ledCanvasContainer';
-    // Create the canvas element dynamically
-    this.ledCanvas = document.createElement('canvas');
-    this.ledCanvas.id = 'ledLightshowCanvas';
-    this.ledCanvasContainer.appendChild(this.ledCanvas);
-    deviceButton.insertAdjacentElement('afterend', this.ledCanvasContainer);
-
-    // Initialize progress ring to be empty (full stroke-dashoffset)
     const circle = document.querySelector('.progress-ring__circle');
     const radius = circle.r.baseVal.value;
     const circumference = 2 * Math.PI * radius;
 
-    // Initially set it to full circumference (empty)
     circle.style.strokeDasharray = `${circumference} ${circumference}`;
     circle.style.strokeDashoffset = `${circumference}`;
+
+    // Update the offset to animate
+    function setProgress(percent) {
+      const offset = circumference - (percent / 100) * circumference;
+      circle.style.strokeDashoffset = offset;
+    }
+
   }
 
   // Adjust the handlePressStart method to ensure correct press start handling
@@ -706,12 +705,32 @@ export default class Tutorial {
     this.updateTutorialStep(this.currentStep);
   }
 
-  // Update the current step and disable the Next button until action is completed
+  adjustFontSizeToFit(element) {
+    const initialFontSize = 20; // Starting font size in pixels
+    let fontSize = initialFontSize;
+    element.style.fontSize = `${fontSize}px`;
+
+    // Loop until the text fits or reaches the minimum font size
+    while (element.scrollHeight > element.clientHeight && fontSize > 10) { // 10px as a minimum font size
+      fontSize -= 1;
+      element.style.fontSize = `${fontSize}px`;
+    }
+  }
+
   updateTutorialStep(stepIndex) {
     const step = this.steps[stepIndex];
-    document.querySelector('.tutorial-step-title').textContent = `${step.title}`;
+    const contentEl = document.querySelector('.tutorial-step-content');
+    contentEl.style.fontSize = '20px'; // Reset font size to starting point
+
+    // Set content text
     let content = (typeof step.content === 'function') ? step.content() : step.content;
-    document.querySelector('.tutorial-step-content').innerHTML = "<span>" + content + "</span>"; 
+    contentEl.innerHTML = content;
+
+    // Adjust font size if the content overflows
+    this.adjustFontSizeToFit(contentEl);
+
+    // Update other elements as usual
+    document.querySelector('.tutorial-step-title').textContent = `${step.title}`;
     document.querySelector('.tutorial-step-number').textContent = `${stepIndex + 1}`;
   }
 
