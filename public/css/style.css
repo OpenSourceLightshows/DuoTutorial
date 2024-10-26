@@ -478,6 +478,160 @@ body, html {
 }
 
 /* =======================================
+   Color Select Overlay
+   ======================================= */
+
+/* Color Select Overlay Positioning */
+#color-select-overlay {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  z-index: 1000;
+}
+
+/* Slot Styling */
+.slot {
+  width: 30px;
+  height: 30px;
+  margin: 3px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border: 2px solid gray;
+}
+
+.color-slot {
+  box-shadow: 0 0 5px 2px currentColor; /* Set shadow color from element's own background color */
+}
+
+.slot-selected {
+  box-shadow: 0 0 5px 2px yellow; /* Set shadow color from element's own background color */
+}
+
+/* Empty Slot */
+.empty {
+  background-color: #222;
+  border: 2px dashed #555;
+  cursor: default;
+  box-shadow: none;
+}
+
+.exit-slot {
+  background-color: #211;
+  border: 2px solid #300;
+}
+
+/* Add Slot */
+.add-slot {
+  background-color: #444;
+  border: 2px solid #666;
+}
+
+.slot-back-icon {
+  margin-top: -1px; /* it's 1 pixel offset */
+  font-size: 18px;
+  color: #fff;
+}
+
+.slot-plus-icon {
+  font-size: 28px;
+  color: #fff;
+}
+
+/* Flashing Red for Delete Mode */
+.flashing-red {
+  animation: flashRed 1s infinite;
+}
+
+/* Flashing Red Keyframes */
+@keyframes flashRed {
+  50% {
+    background-color: rgba(255, 0, 0, 0.6);
+    box-shadow: 0 0 5px 2px rgba(255, 0, 0, 0.6);
+  }
+}
+
+@media (max-width: 900px) {
+  .slot {
+    width: 24px;
+    height: 24px;
+    margin: 2px;
+  }
+
+  .slot-back-icon {
+    font-size: 18px;
+  }
+
+  .slot-plus-icon {
+    font-size: 28px;
+  }
+}
+
+@media (max-width: 700px) {
+  .slot {
+    width: 20px;
+    height: 20px;
+    margin: 1px;
+  }
+
+  .slot-back-icon {
+    font-size: 14px;
+  }
+
+  .slot-plus-icon {
+    font-size: 24px;
+  }
+}
+
+@media (max-width: 600px) {
+  .slot {
+    width: 16px;
+    height: 16px;
+  }
+
+  .slot-back-icon {
+    font-size: 10px;
+  }
+
+  .slot-plus-icon {
+    font-size: 20px;
+  }
+}
+
+/* Responsive Adjustments */
+@media (max-width: 500px) {
+  .slot {
+    width: 12px;
+    height: 12px;
+  }
+
+  .slot-back-icon {
+    font-size: 6px;
+  }
+
+  .slot-plus-icon {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 400px) {
+  .slot {
+    width: 8px;
+    height: 8px;
+  }
+
+  .slot-plus-icon {
+    font-size: 12px;
+  }
+}
+
+/* =======================================
    Responsive Layout for Mobile
    ======================================= */
 

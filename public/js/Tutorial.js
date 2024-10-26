@@ -1,5 +1,6 @@
 import Notification from './Notification.js';
 import TutorialTree from './TutorialTree.js';
+import ColorSelectOverlay from './ColorSelectOverlay.js';
 
 export default class Tutorial {
   constructor(vortexLib, lightshow) {
@@ -10,6 +11,7 @@ export default class Tutorial {
     this.pressStartTime = null; // Track press start time
     this.holdTimeouts = []; // To store timeouts for clearing on early release
     this.tutorialTree = new TutorialTree(this.vortexLib);
+    this.colorSelectOverlay = new ColorSelectOverlay();
     this.buttonDown = false;
 
     // Step-specific data (e.g., a counter for step 1)
@@ -499,6 +501,14 @@ export default class Tutorial {
         content: () => `First, short click to pick which leds will be targeted, then long click to choose those leds<br>Targeting: ${this.stepData.targetLed}`,
         buttonTime: 0.25,
         prepare: () => {
+          this.vortexLib.Vortex.shortClick(0);
+          this.vortexLib.Vortex.shortClick(0);
+          this.vortexLib.Vortex.menuEnterClick(0);
+          this.vortexLib.Vortex.shortClick(0);
+          this.vortexLib.Vortex.shortClick(0);
+          this.vortexLib.Vortex.longClick(0);
+          this.lightshow.toggleEnabled();
+          this.tutorialTree.navigateToState('state-mode-2', 'state-menu-2', 'state-led-select');
         },
         action: (type, dur) => {
           if (type != 'up') {
@@ -518,11 +528,20 @@ export default class Tutorial {
             this.vortexLib.Vortex.shortClick(0);
           } else {
             this.tutorialTree.navigateToState('state-mode-' + this.vortexLib.Vortex.curModeIndex(),
-                                              'state-menu-2',
-                                              'state-randomizing');
+              'state-menu-2', 'state-color-select');
             this.vortexLib.Vortex.longClick(0);
             Notification.success("Good, you picked the leds to be targeted by the menu");
             this.nextStep();
+            const led = (this.stepData.targetLed === 'Top Led') ? this.vortexLib.LedPos.LED_1 : this.vortexLib.LedPos.LED_0;
+            var set = new this.vortexLib.Colorset();
+            this.vortexLib.Vortex.getColorset(led, set);
+            let setArr = [];
+            for (let i = 0; i < set.numColors(); ++i) {
+              const color = set.get(i);
+              const hexColor = `#${((1 << 24) + (color.red << 16) + (color.green << 8) + color.blue).toString(16).slice(1).toUpperCase()}`;
+              setArr.push(hexColor);
+            }
+            this.colorSelectOverlay.initialize(setArr);
           }
         }
       },
@@ -541,18 +560,131 @@ export default class Tutorial {
           }
           if (dur < 250) {
             // add 1 for readability
-            Notification.message("Selected color slot #" + this.stepData.colSlot + 1);
             this.vortexLib.Vortex.shortClick(0);
+            this.colorSelectOverlay.iterateSelecton();
+            Notification.message("Selected " + this.colorSelectOverlay.selectedName);
           } else {
             this.tutorialTree.navigateToState('state-mode-' + this.vortexLib.Vortex.curModeIndex());
             this.vortexLib.Vortex.longClick(0);
-            Notification.success("Well done, you successfully randomized a mode");
-            this.nextStep();
+            if (this.colorSelectOverlay.selectedIndex == 8) {
+              Notification.success("Well done, you successfully edited a colorset");
+              this.nextStep();
+            }
           }
         }
       },
-
-
+      // ================================================================================
+      {
+        title: "Pick a Hue Quadrant",
+        content: "Short click to cycle through the four quadrants, long click to pick one",
+        buttonTime: 0.25,
+        prepare: () => {
+          this.lightshow.toggleEnabled();
+          this.tutorialTree.navigateToState('state-mode-' + this.vortexLib.Vortex.curModeIndex());
+        },
+        action: (type, dur) => {
+          if (type != 'up') {
+            return;
+          }
+          if (dur < 250) {
+            // add 1 for readability
+            Notification.message("Selected color slot #" + this.stepData.colSlot + 1);
+            this.vortexLib.Vortex.shortClick(0);
+            this.colorSelectOverlay.iterateSelecton();
+          } else {
+            this.tutorialTree.navigateToState('state-mode-' + this.vortexLib.Vortex.curModeIndex());
+            this.vortexLib.Vortex.longClick(0);
+            if (this.colorSelectOverlay.selectedIndex == 8) {
+              Notification.success("Well done, you successfully edited a colorset");
+              this.nextStep();
+            }
+          }
+        }
+      },
+      // ================================================================================
+      {
+        title: "Pick a Hue",
+        content: "Short click to cycle through the four quadrants, long click to pick one",
+        buttonTime: 0.25,
+        prepare: () => {
+          this.lightshow.toggleEnabled();
+          this.tutorialTree.navigateToState('state-mode-' + this.vortexLib.Vortex.curModeIndex());
+        },
+        action: (type, dur) => {
+          if (type != 'up') {
+            return;
+          }
+          if (dur < 250) {
+            // add 1 for readability
+            Notification.message("Selected color slot #" + this.stepData.colSlot + 1);
+            this.vortexLib.Vortex.shortClick(0);
+            this.colorSelectOverlay.iterateSelecton();
+          } else {
+            this.tutorialTree.navigateToState('state-mode-' + this.vortexLib.Vortex.curModeIndex());
+            this.vortexLib.Vortex.longClick(0);
+            if (this.colorSelectOverlay.selectedIndex == 8) {
+              Notification.success("Well done, you successfully edited a colorset");
+              this.nextStep();
+            }
+          }
+        }
+      },
+      // ================================================================================
+      {
+        title: "Pick a Saturation",
+        content: "Short click to cycle through the four quadrants, long click to pick one",
+        buttonTime: 0.25,
+        prepare: () => {
+          this.lightshow.toggleEnabled();
+          this.tutorialTree.navigateToState('state-mode-' + this.vortexLib.Vortex.curModeIndex());
+        },
+        action: (type, dur) => {
+          if (type != 'up') {
+            return;
+          }
+          if (dur < 250) {
+            // add 1 for readability
+            Notification.message("Selected color slot #" + this.stepData.colSlot + 1);
+            this.vortexLib.Vortex.shortClick(0);
+            this.colorSelectOverlay.iterateSelecton();
+          } else {
+            this.tutorialTree.navigateToState('state-mode-' + this.vortexLib.Vortex.curModeIndex());
+            this.vortexLib.Vortex.longClick(0);
+            if (this.colorSelectOverlay.selectedIndex == 8) {
+              Notification.success("Well done, you successfully edited a colorset");
+              this.nextStep();
+            }
+          }
+        }
+      },
+      // ================================================================================
+      {
+        title: "Pick a Value",
+        content: "Short click to cycle through the four quadrants, long click to pick one",
+        buttonTime: 0.25,
+        prepare: () => {
+          this.lightshow.toggleEnabled();
+          this.tutorialTree.navigateToState('state-mode-' + this.vortexLib.Vortex.curModeIndex());
+        },
+        action: (type, dur) => {
+          if (type != 'up') {
+            return;
+          }
+          if (dur < 250) {
+            // add 1 for readability
+            Notification.message("Selected color slot #" + this.stepData.colSlot + 1);
+            this.vortexLib.Vortex.shortClick(0);
+            this.colorSelectOverlay.iterateSelecton();
+          } else {
+            this.tutorialTree.navigateToState('state-mode-' + this.vortexLib.Vortex.curModeIndex());
+            this.vortexLib.Vortex.longClick(0);
+            if (this.colorSelectOverlay.selectedIndex == 8) {
+              Notification.success("Well done, you successfully edited a colorset");
+              this.nextStep();
+            }
+          }
+        }
+      },
     ];
   }
 
@@ -566,7 +698,7 @@ export default class Tutorial {
     this.updateTutorialStep(this.currentStep);
 
     // skip to a step
-    //this.gotoStep('Mode Sharing Menu', true);
+    //this.gotoStep('Color Select Menu', true);
     //this.gotoStep('Pick a Color Slot', true);
 
     // disable duoImage context menu

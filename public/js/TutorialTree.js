@@ -21,7 +21,7 @@ export default class TutorialTree {
       // menus
       'state-menu-0': { label: 'Randomizer', children: ['state-led-select', 'state-randomizing'] },
       'state-menu-1': { label: 'Mode Sharing', children: ['state-mode-sharing-receive', 'state-mode-sharing-send'] },
-      'state-menu-2': { label: 'Color Select', children: ['state-led-select'] },
+      'state-menu-2': { label: 'Color Select', children: ['state-led-select', 'state-color-select', 'state-color-select-quad', 'state-color-select-hue', 'state-color-select-sat', 'state-color-select-val'] },
       'state-menu-3': { label: 'Pattern select', children: ['state-led-select'] },
       'state-menu-4': { label: 'Global Brightness', children: [] },
       'state-menu-5': { label: 'Factory Reset', children: [] },
@@ -37,16 +37,20 @@ export default class TutorialTree {
       'state-mode-sharing-send': { label: 'Sending Mode' },
 
       // color select
-      'state-color-select': { label: 'Randomizing' },
+      'state-color-select': { label: 'Pick Color Slot' },
+      'state-color-select-quad': { label: 'Pick Hue Quadrant' },
+      'state-color-select-hue': { label: 'Pick Hue' },
+      'state-color-select-sat': { label: 'Pick Saturation' },
+      'state-color-select-val': { label: 'Pick Value/Brightness' },
 
       // pattern select
-      'state-pattern-select': { label: 'Randomizing' },
+      'state-pattern-select': { label: 'Pattern Select' },
 
       // global brightness
-      'state-global-brightness': { label: 'Randomizing' },
+      'state-global-brightness': { label: 'Global Brightness' },
 
       // factory reset
-      'state-factory-reset': { label: 'Randomizing' },
+      'state-factory-reset': { label: 'Factory Reset' },
     };
 
     this.initMap();
