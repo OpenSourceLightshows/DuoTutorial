@@ -82,6 +82,15 @@ export default class ColorSelectOverlay {
     }
   }
 
+  selectionType() {
+    if (this.selectedIndex === 8) {
+      return 2;
+    } else if (this.selectedIndex < 8 && this.selectedIndex === (this.colorset.length)) {
+      return 1;
+    }
+    return 0;
+  }
+
   iterateSelecton() {
     this.selectedIndex++;
     if (this.selectedIndex >= 9) {
@@ -90,11 +99,11 @@ export default class ColorSelectOverlay {
       this.selectedIndex = 8;
     }
     if (this.selectedIndex === 8) {
-      this.selectedName = 'Exit Color Select';
+      this.selectedName = 'Exit';
     } else if (this.selectedIndex < 8 && this.selectedIndex === (this.colorset.length)) {
-      this.selectedName = 'Add Color';
+      this.selectedName = 'Add Color #' + (this.selectedIndex + 1);
     } else {
-      this.selectedName = 'Color Slot ' + (this.selectedIndex + 1);
+      this.selectedName = 'Edit Color #' + (this.selectedIndex + 1);
     }
     this.renderSlots();
   }

@@ -548,11 +548,9 @@ export default class Tutorial {
       // ================================================================================
       {
         title: "Pick a Color Slot",
-        content: "Short click to cycle through the colors of this mode, long click to edit a color",
+        content: "Short click to cycle through the colors of this mode, long click one to edit the color, or the gray blink to add new",
         buttonTime: 0.25,
         prepare: () => {
-          this.lightshow.toggleEnabled();
-          this.tutorialTree.navigateToState('state-mode-' + this.vortexLib.Vortex.curModeIndex());
         },
         action: (type, dur) => {
           if (type != 'up') {
@@ -562,15 +560,18 @@ export default class Tutorial {
             // add 1 for readability
             this.vortexLib.Vortex.shortClick(0);
             this.colorSelectOverlay.iterateSelecton();
-            Notification.message("Selected " + this.colorSelectOverlay.selectedName);
-          } else {
-            this.tutorialTree.navigateToState('state-mode-' + this.vortexLib.Vortex.curModeIndex());
-            this.vortexLib.Vortex.longClick(0);
-            if (this.colorSelectOverlay.selectedIndex == 8) {
-              Notification.success("Well done, you successfully edited a colorset");
-              this.nextStep();
-            }
+            Notification.message(this.colorSelectOverlay.selectedName);
+            return;
           }
+          if (this.colorSelectOverlay.selectionType() == 2) {
+            Notification.failure("That is exit, try to add or edit a color");
+            return;
+          }
+          Notification.success(this.colorSelectOverlay.selectedName);
+          this.tutorialTree.navigateToState('state-mode-' + this.vortexLib.Vortex.curModeIndex(),
+            'state-menu-2', 'state-color-select-quad');
+          this.vortexLib.Vortex.longClick(0);
+          this.nextStep();
         }
       },
       // ================================================================================
@@ -579,25 +580,18 @@ export default class Tutorial {
         content: "Short click to cycle through the four quadrants, long click to pick one",
         buttonTime: 0.25,
         prepare: () => {
-          this.lightshow.toggleEnabled();
-          this.tutorialTree.navigateToState('state-mode-' + this.vortexLib.Vortex.curModeIndex());
         },
         action: (type, dur) => {
           if (type != 'up') {
             return;
           }
           if (dur < 250) {
-            // add 1 for readability
-            Notification.message("Selected color slot #" + this.stepData.colSlot + 1);
             this.vortexLib.Vortex.shortClick(0);
-            this.colorSelectOverlay.iterateSelecton();
           } else {
-            this.tutorialTree.navigateToState('state-mode-' + this.vortexLib.Vortex.curModeIndex());
+            this.tutorialTree.navigateToState('state-mode-' + this.vortexLib.Vortex.curModeIndex(),
+              'state-menu-2', 'state-color-select-hue');
             this.vortexLib.Vortex.longClick(0);
-            if (this.colorSelectOverlay.selectedIndex == 8) {
-              Notification.success("Well done, you successfully edited a colorset");
-              this.nextStep();
-            }
+            this.nextStep();
           }
         }
       },
@@ -607,25 +601,18 @@ export default class Tutorial {
         content: "Short click to cycle through the four quadrants, long click to pick one",
         buttonTime: 0.25,
         prepare: () => {
-          this.lightshow.toggleEnabled();
-          this.tutorialTree.navigateToState('state-mode-' + this.vortexLib.Vortex.curModeIndex());
         },
         action: (type, dur) => {
           if (type != 'up') {
             return;
           }
           if (dur < 250) {
-            // add 1 for readability
-            Notification.message("Selected color slot #" + this.stepData.colSlot + 1);
             this.vortexLib.Vortex.shortClick(0);
-            this.colorSelectOverlay.iterateSelecton();
           } else {
-            this.tutorialTree.navigateToState('state-mode-' + this.vortexLib.Vortex.curModeIndex());
+            this.tutorialTree.navigateToState('state-mode-' + this.vortexLib.Vortex.curModeIndex(),
+              'state-menu-2', 'state-color-select-sat');
             this.vortexLib.Vortex.longClick(0);
-            if (this.colorSelectOverlay.selectedIndex == 8) {
-              Notification.success("Well done, you successfully edited a colorset");
-              this.nextStep();
-            }
+            this.nextStep();
           }
         }
       },
@@ -635,25 +622,18 @@ export default class Tutorial {
         content: "Short click to cycle through the four quadrants, long click to pick one",
         buttonTime: 0.25,
         prepare: () => {
-          this.lightshow.toggleEnabled();
-          this.tutorialTree.navigateToState('state-mode-' + this.vortexLib.Vortex.curModeIndex());
         },
         action: (type, dur) => {
           if (type != 'up') {
             return;
           }
           if (dur < 250) {
-            // add 1 for readability
-            Notification.message("Selected color slot #" + this.stepData.colSlot + 1);
             this.vortexLib.Vortex.shortClick(0);
-            this.colorSelectOverlay.iterateSelecton();
           } else {
-            this.tutorialTree.navigateToState('state-mode-' + this.vortexLib.Vortex.curModeIndex());
+            this.tutorialTree.navigateToState('state-mode-' + this.vortexLib.Vortex.curModeIndex(),
+              'state-menu-2', 'state-color-select-val');
             this.vortexLib.Vortex.longClick(0);
-            if (this.colorSelectOverlay.selectedIndex == 8) {
-              Notification.success("Well done, you successfully edited a colorset");
-              this.nextStep();
-            }
+            this.nextStep();
           }
         }
       },
@@ -663,8 +643,27 @@ export default class Tutorial {
         content: "Short click to cycle through the four quadrants, long click to pick one",
         buttonTime: 0.25,
         prepare: () => {
-          this.lightshow.toggleEnabled();
-          this.tutorialTree.navigateToState('state-mode-' + this.vortexLib.Vortex.curModeIndex());
+        },
+        action: (type, dur) => {
+          if (type != 'up') {
+            return;
+          }
+          if (dur < 250) {
+            this.vortexLib.Vortex.shortClick(0);
+          } else {
+            this.tutorialTree.navigateToState('state-mode-' + this.vortexLib.Vortex.curModeIndex(),
+              'state-menu-2', 'state-color-select');
+            this.vortexLib.Vortex.longClick(0);
+            this.gotoStep();
+          }
+        }
+      },
+      // ================================================================================
+      {
+        title: "Pick a Color Slot or Exit",
+        content: "Great you changed a color, either add/edit another color or exit",
+        buttonTime: 0.25,
+        prepare: () => {
         },
         action: (type, dur) => {
           if (type != 'up') {
@@ -672,16 +671,28 @@ export default class Tutorial {
           }
           if (dur < 250) {
             // add 1 for readability
-            Notification.message("Selected color slot #" + this.stepData.colSlot + 1);
             this.vortexLib.Vortex.shortClick(0);
             this.colorSelectOverlay.iterateSelecton();
+            Notification.message(this.colorSelectOverlay.selectedName);
+            return;
+          }
+          if (this.colorSelectOverlay.selectionType() == 2) {
+            Notification.failure("That is exit, try to add or edit a color");
+            return;
+          }
+          Notification.success(this.colorSelectOverlay.selectedName);
+          this.tutorialTree.navigateToState('state-mode-' + this.vortexLib.Vortex.curModeIndex(),
+            'state-menu-2', 'state-color-select-quad');
+          this.vortexLib.Vortex.longClick(0);
+          this.nextStep();
+
+          if (dur < 250) {
+            this.vortexLib.Vortex.shortClick(0);
           } else {
-            this.tutorialTree.navigateToState('state-mode-' + this.vortexLib.Vortex.curModeIndex());
+            this.tutorialTree.navigateToState('state-mode-' + this.vortexLib.Vortex.curModeIndex(),
+              'state-menu-2', 'state-color-select');
             this.vortexLib.Vortex.longClick(0);
-            if (this.colorSelectOverlay.selectedIndex == 8) {
-              Notification.success("Well done, you successfully edited a colorset");
-              this.nextStep();
-            }
+            this.gotoStep();
           }
         }
       },

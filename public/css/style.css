@@ -301,7 +301,7 @@ body, html {
   left: 10px;
   width: 250px;
   font-family: 'Roboto', sans-serif;
-  font-size: 14px;
+  font-size: 12px;
   color: #ddd;
   z-index: 5000;
   background-color: rgba(0, 0, 0, 0);
@@ -316,7 +316,7 @@ body, html {
   margin-left: 10px; /* Indentation based on level */
   display: flex;
   align-items: center;
-  cursor: pointer;
+  user-select: none;
 }
 
 /* Vertical line connecting to previous sibling node */
@@ -368,7 +368,6 @@ body, html {
 
 /* Hover effect */
 .tree-node:hover {
-  color: #fff;
 }
 
 /* =======================================

@@ -8,11 +8,11 @@ export default class TutorialTree {
       'state-all': { label: 'Duo Navigation', children: ['state-off', 'state-on'], isExpanded: true},
 
       // main
-      'state-off': { label: 'Off', title: 'Device is Off', children: [] },
-      'state-on': { label: 'On', title: 'Device is On', children: ['state-mode-0', 'state-mode-1', 'state-mode-2', 'state-mode-3', 'state-mode-4'] },
+      'state-off': { label: 'Off', children: [] },
+      'state-on': { label: 'On', children: ['state-mode-0', 'state-mode-1', 'state-mode-2', 'state-mode-3', 'state-mode-4'] },
 
       // modes
-      'state-mode-0': { label: 'Mode 1', title: 'Device is playing Mode 1', children: ['state-menu-0', 'state-menu-1', 'state-menu-2', 'state-menu-3', 'state-menu-4', 'state-menu-5' ] },
+      'state-mode-0': { label: 'Mode 1', children: ['state-menu-0', 'state-menu-1', 'state-menu-2', 'state-menu-3', 'state-menu-4', 'state-menu-5' ] },
       'state-mode-1': { label: 'Mode 2', children: ['state-menu-0', 'state-menu-1', 'state-menu-2', 'state-menu-3', 'state-menu-4', 'state-menu-5' ] },
       'state-mode-2': { label: 'Mode 3', children: ['state-menu-0', 'state-menu-1', 'state-menu-2', 'state-menu-3', 'state-menu-4', 'state-menu-5' ] },
       'state-mode-3': { label: 'Mode 4', children: ['state-menu-0', 'state-menu-1', 'state-menu-2', 'state-menu-3', 'state-menu-4', 'state-menu-5' ] },
@@ -54,7 +54,6 @@ export default class TutorialTree {
     };
 
     this.initMap();
-    this.updateActiveState('state-off');
   }
 
   // Initialize the tree structure in the DOM
@@ -73,11 +72,18 @@ export default class TutorialTree {
     document.body.appendChild(tutorialTitleDiv);
 
     // Create the tree structure
-    this.renderMap(treeContainer, 'state-all', 0);
+    this.updateActiveState(treeContainer, 'state-off');
+  }
+
+  renderMap(container) {
+    // render the map
+    this.renderMapInner(container, 'state-all', 0);
+    // Add 'active' class to the new state
+    document.getElementById(this.currentState)?.classList.add('active');
   }
 
   // Recursive function to render the map
-  renderMap(container, stateId, depth) {
+  renderMapInner(container, stateId, depth) {
     const node = this.map[stateId];
     const nodeElement = document.createElement('div');
     nodeElement.classList.add('tree-node');
@@ -86,26 +92,29 @@ export default class TutorialTree {
       // mobile? I think?
       nodeElement.style.marginLeft = `${depth * 6}px`; // Indent based on depth level
     } else {
-      nodeElement.style.marginLeft = `${depth * 15}px`; // Indent based on depth level
+      nodeElement.style.marginLeft = `${depth * 10}px`; // Indent based on depth level
     }
 
     // Toggle arrow symbol (collapsed/expanded)
-    const toggleArrow = (node.isExpanded ? '▼' : '▶');
-    nodeElement.innerHTML = `${toggleArrow} ${node.label}`;
+    const toggleIcon = ((this.currentState === stateId) ? '▣' : '▢');
+    const toggleArrow = (node.isExpanded ? '▼' : toggleIcon);
+
+    const selectIcon = ((node.children && node.children.length > 0) ? toggleArrow : toggleIcon);
+    nodeElement.innerHTML = `${selectIcon} ${node.label}`;
 
     container.appendChild(nodeElement);
 
     // Render child nodes if expanded
     if (node.children && node.isExpanded) {
       node.children.forEach((childId) => {
-        this.renderMap(container, childId, depth + 1);  // Increase depth when rendering children
+        this.renderMapInner(container, childId, depth + 1);  // Increase depth when rendering children
       });
     }
 
-    // Event listener to toggle branch expansion on click
-    nodeElement.addEventListener('click', () => {
-      this.toggleBranch(stateId); // Allow expansion/collapse on click
-    });
+    // TODO: handle clicks?
+    //nodeElement.addEventListener('click', () => {
+    //  this.toggleBranch(stateId); // Allow expansion/collapse on click
+    //});
   }
 
 
@@ -121,10 +130,9 @@ export default class TutorialTree {
     // Re-render the tree to reflect changes
     const treeContainer = document.getElementById('tutorialTree');
     treeContainer.innerHTML = ''; // Clear the existing tree
-    this.renderMap(treeContainer, 'state-all', 0);
 
     // Update the active state after re-rendering
-    this.updateActiveState(this.currentState);
+    this.updateActiveState(treeContainer, this.currentState);
   }
 
   // Handle navigation to different states based on the tree
@@ -247,13 +255,12 @@ export default class TutorialTree {
     // Re-render the tree after adjusting the parent expansions
     const treeContainer = document.getElementById('tutorialTree');
     treeContainer.innerHTML = ''; // Clear the existing tree
-    this.renderMap(treeContainer, 'state-all', 0);
 
     const tutorialTitle = document.getElementById('tutorialTitle');
     tutorialTitle.innerHTML = ('title' in curNode) ? curNode.title : '';
 
     // Set the current state and mark it as active (select the target node)
-    this.updateActiveState(targetNodeId);
+    this.updateActiveState(treeContainer, targetNodeId);
   }
 
   collapseUnrelatedParents(newStatePath, previousStatePath) {
@@ -287,16 +294,11 @@ export default class TutorialTree {
   }
 
   // Update the visual representation of the active state
-  updateActiveState(stateId) {
-    // Remove 'active' class from the previous state
-    document.getElementById(this.currentState)?.classList.remove('active');
-
+  updateActiveState(treeContainer, stateId) {
     // Update the current state
     this.currentState = stateId;
-
-    // Add 'active' class to the new state
-    document.getElementById(this.currentState)?.classList.add('active');
+    // re-render
+    this.renderMap(treeContainer);
   }
-
 }
 
