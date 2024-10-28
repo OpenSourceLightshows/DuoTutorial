@@ -21,6 +21,8 @@ export default class Tutorial {
       targetLed: 'Both Leds',
       colSlot: 0,
       selectedPattern: 'Strobe',
+      selectedBrightness: 'Max Brightness',
+      selectedReset: 'Exit',
     };
 
     this.steps = [
@@ -156,7 +158,7 @@ export default class Tutorial {
       // ================================================================================
       {
         title: "Cycling Modes",
-        content: () => `Short click to cycle through the available modes.<br>${(this.stepData.clickCounter > 0) ? `Current Mode: ${this.stepData.clickCounter + 1} / 5` : ``}`,
+        content: () => `Short click to cycle through the available modes.`,
         action: (type, dur) => {
           if (type != 'up') {
             return;
@@ -452,8 +454,9 @@ export default class Tutorial {
           } else {
             const curMenuID = this.vortexLib.Menus.curMenuID().value;
             Notification.success(`Success, you entered the ${this.stepData.curMenu} menu`);
+            const menu = 'state-menu-' + curMenuID;
             this.tutorialTree.navigateToState('state-mode-' + this.vortexLib.Vortex.curModeIndex(),
-              'state-menu-' + curMenuID);
+              menu, this.tutorialTree.map[menu].children[0]);
             this.vortexLib.Vortex.longClick(0);
             this.gotoStep(`${this.stepData.curMenu} Menu`);
           }
@@ -925,6 +928,130 @@ export default class Tutorial {
         }
       },
 
+      // ================================================================================
+      //  Global Brightness Menu
+      // ================================================================================
+      {
+        title: "Global Brightness Menu",
+        content: () => `Short click to view available brightnesses, long click to choose that brightness`,
+        buttonTime: 0.25,
+        prepare: () => {
+          //this.vortexLib.Vortex.shortClick(0);
+          //this.vortexLib.Vortex.shortClick(0);
+          this.vortexLib.Vortex.menuEnterClick(0);
+          this.vortexLib.Vortex.shortClick(0);
+          this.vortexLib.Vortex.shortClick(0);
+          this.vortexLib.Vortex.shortClick(0);
+          this.vortexLib.Vortex.shortClick(0);
+          this.vortexLib.Vortex.longClick(0);
+          this.lightshow.toggleEnabled();
+          this.tutorialTree.navigateToState('state-mode-0', 'state-menu-4', 'state-global-brightness');
+        },
+        action: (type, dur) => {
+          if (type != 'up') {
+            return;
+          }
+          const brightnessOptions = [
+            'Exit',
+            'Low Brightness',
+            'Medium Brightness',
+            'High Brightness',
+            'Max Brightness'
+          ];
+          if (dur < 250) {
+            this.stepData.clickCounter++;
+            this.stepData.selectedBrightness = brightnessOptions[(this.stepData.clickCounter + 4) % 5];
+            Notification.message("Selected " + this.stepData.selectedBrightness);
+            this.vortexLib.Vortex.shortClick(0);
+          } else {
+            this.tutorialTree.navigateToState('state-mode-' + this.vortexLib.Vortex.curModeIndex());
+            this.vortexLib.Vortex.longClick(0);
+            if (this.stepData.selectedBrightness === 'Exit') {
+              Notification.success("Exited global brightness without saving");
+            } else {
+              Notification.success("Well done you updated the global brightness");
+            }
+            this.gotoStep('Understand Where You Are');
+          }
+        }
+      },
+
+      // ================================================================================
+      //  Factory Reset Menu
+      // ================================================================================
+      {
+        title: "Factory Reset Menu",
+        content: () => `Long click to cancel and exit. Short click to begin factory reset`,
+        buttonTime: 0.25,
+        prepare: () => {
+          //this.vortexLib.Vortex.shortClick(0);
+          //this.vortexLib.Vortex.shortClick(0);
+          this.vortexLib.Vortex.menuEnterClick(0);
+          this.vortexLib.Vortex.shortClick(0);
+          this.vortexLib.Vortex.shortClick(0);
+          this.vortexLib.Vortex.shortClick(0);
+          this.vortexLib.Vortex.shortClick(0);
+          this.vortexLib.Vortex.shortClick(0);
+          this.vortexLib.Vortex.longClick(0);
+          this.lightshow.toggleEnabled();
+          this.tutorialTree.navigateToState('state-mode-0', 'state-menu-5', 'state-factory-reset');
+        },
+        action: (type, dur) => {
+          if (type != 'up') {
+            return;
+          }
+          if (dur < 250) {
+            this.stepData.clickCounter++;
+            this.stepData.selectedReset = 'Begin Reset';
+            Notification.message("Selected " + this.stepData.selectedReset);
+            this.vortexLib.Vortex.shortClick(0);
+            this.tutorialTree.navigateToState('state-mode-0', 'state-menu-5', 'state-factory-reset-confirm');
+            this.nextStep();
+          } else {
+            this.tutorialTree.navigateToState('state-mode-' + this.vortexLib.Vortex.curModeIndex());
+            this.vortexLib.Vortex.longClick(0);
+            if (this.stepData.selectedReset === 'Exit') {
+              Notification.success("Exited factory reset without changes");
+            } else {
+              Notification.success("Successfully performed factory reset");
+            }
+            this.gotoStep('Understand Where You Are');
+          }
+        }
+      },
+      // ================================================================================
+      {
+        title: "Perform Reset",
+        content: "Short click to switch back to exit reset, hold till white to reset",
+        buttonTime: 0.25,
+        prepare: () => {
+        },
+        action: (type, dur) => {
+          if (type != 'up') {
+            this.lightshow.injectResetCharge(true); // Example function to simulate a pattern change
+            console.log("Injecting");
+            return;
+          }
+          this.lightshow.injectResetCharge(false); // Example function to simulate a pattern change
+          if (dur < 250) {
+            Notification.message("Selected Exit");
+            this.vortexLib.Vortex.shortClick(0);
+            this.tutorialTree.navigateToState('state-mode-0', 'state-menu-5', 'state-factory-reset');
+            this.stepData.selectedReset = 'Exit';
+            this.gotoStep('Factory Reset Menu');
+          } else {
+            if (dur < 3000) {
+              Notification.message("Hold longer to reset");
+            } else {
+              Notification.success("Performed reset");
+              this.vortexLib.Vortex.factoryResetClick(0);
+              this.tutorialTree.navigateToState('state-mode-0');
+              this.gotoStep('Understand Where You Are');
+            }
+          }
+        }
+      },
+
     ];
   }
 
@@ -938,7 +1065,7 @@ export default class Tutorial {
     this.updateTutorialStep(this.currentStep);
 
     // skip to a step
-    //this.gotoStep('Pattern Select Menu', true);
+    this.gotoStep('Factory Reset Menu', true);
     //this.gotoStep('Pick a Color Slot', true);
 
     // disable duoImage context menu

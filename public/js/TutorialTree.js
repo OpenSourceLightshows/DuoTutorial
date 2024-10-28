@@ -47,7 +47,7 @@ export default class TutorialTree {
       'state-pattern-select': { label: 'Pattern Select' },
 
       // global brightness
-      'state-global-brightness': { label: 'Global Brightness' },
+      'state-global-brightness': { label: 'Select Brightness' },
 
       // factory reset
       'state-factory-reset': { label: 'Factory Reset' },

@@ -39,6 +39,7 @@ export default class Lightshow {
 
     // extra hack to fake deletion
     this.injectDelete = false;
+    this.injectReset = false;
 
     // Initialize histories for each LED
     this.updateHistories();
@@ -267,12 +268,11 @@ export default class Lightshow {
 
   doTick() {
     const leds = this.vortexLib.Tick();
-    const time = Date.now(); // Current time in milliseconds
-
-    // Set up sine wave pulse, scaling the amplitude to vary brightness between 0 and 255
-    const pulse = Math.floor((Math.sin(time / 500) + 1) * 127.5); // 500ms controls the speed of pulsing
 
     if (this.injectDelete) {
+      // Set up sine wave pulse, scaling the amplitude to vary brightness between 0 and 255
+      const time = Date.now(); // Current time in milliseconds
+      const pulse = Math.floor((Math.sin(time / 500) + 1) * 127.5); // 500ms controls the speed of pulsing
       // Apply the pulsing brightness to red LEDs
       leds[0].red = pulse;
       leds[0].green = 0;
@@ -281,6 +281,24 @@ export default class Lightshow {
       leds[1].red = pulse;
       leds[1].green = 0;
       leds[1].blue = 0;
+    }
+
+    if (this.injectReset) {
+      const now = Date.now(); // Current time in milliseconds
+
+      const elapsed = now - this.startReset;
+
+      // Define large initial blink delays and target end values for smoother ramp
+      let blinkDelay = 300 - (elapsed / 10); // 2-second blinks to start
+      let pulse = 255;
+      if (blinkDelay > 0) {
+      // Calculate whether LEDs should be on or off based on delay
+        pulse = (elapsed % (2 * blinkDelay) < blinkDelay) ? 255 : 0;
+      }
+
+      // Apply the pulsing white color to the LEDs
+      leds[0].red = leds[0].green = leds[0].blue = pulse;
+      leds[1].red = leds[1].green = leds[1].blue = pulse;
     }
 
     return leds;
@@ -538,5 +556,10 @@ export default class Lightshow {
 
   injectDeleteBlink(inject) {
     this.injectDelete = inject;
+  }
+
+  injectResetCharge(inject) {
+    this.injectReset = inject;
+    this.startReset = Date.now(); // Current time in milliseconds
   }
 }
