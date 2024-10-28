@@ -440,8 +440,6 @@ export default class Tutorial {
             return;
           }
           if (dur < 250) {
-            Notification.message("You can open the menus from any mode");
-            this.vortexLib.Vortex.shortClick(0);
             const curMenuID = (this.vortexLib.Menus.curMenuID().value + 1) % 6;
             this.tutorialTree.navigateToState('state-mode-' + this.vortexLib.Vortex.curModeIndex(),
               'state-menu-' + curMenuID);
@@ -456,6 +454,8 @@ export default class Tutorial {
                 default: return 'Unknown';
               }
             })();
+            Notification.message(`The ${this.stepData.curMenu} Menu`);
+            this.vortexLib.Vortex.shortClick(0);
           } else {
             const curMenuID = this.vortexLib.Menus.curMenuID().value;
             Notification.success(`Success, you entered the ${this.stepData.curMenu} menu`);
