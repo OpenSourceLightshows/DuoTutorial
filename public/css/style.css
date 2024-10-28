@@ -880,11 +880,7 @@ body, html {
   }
 
   .tutorial-overlay {
-  }
-
-  .tutorial-overlay {
     height: 55vh; /* Increased height for tutorial content on smaller screens */
-    padding: 5px; /* Reduce padding on mobile */
   }
 
   .tutorial-step-title {
