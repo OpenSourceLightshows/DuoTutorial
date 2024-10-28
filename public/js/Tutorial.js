@@ -1065,7 +1065,7 @@ export default class Tutorial {
     this.updateTutorialStep(this.currentStep);
 
     // skip to a step
-    this.gotoStep('Factory Reset Menu', true);
+    //this.gotoStep('Factory Reset Menu', true);
     //this.gotoStep('Pick a Color Slot', true);
 
     // disable duoImage context menu
