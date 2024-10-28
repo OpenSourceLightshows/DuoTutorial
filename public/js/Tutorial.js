@@ -648,12 +648,14 @@ export default class Tutorial {
           } else {
             if (this.colorSelectOverlay.selectedDropdownIndex === 4) {
               // go back
+              Notification.message("Back to Pick Color Slot");
               this.tutorialTree.navigateToState('state-mode-' + this.vortexLib.Vortex.curModeIndex(),
                 'state-menu-2', 'state-color-select');
               this.colorSelectOverlay.closeDropdown();
               this.vortexLib.Vortex.longClick(0);
               this.gotoStep('Pick a Color Slot');
             } else {
+              Notification.success("Now Pick a Hue");
               this.tutorialTree.navigateToState('state-mode-' + this.vortexLib.Vortex.curModeIndex(),
                 'state-menu-2', 'state-color-select-hue');
               this.colorSelectOverlay.activateHueSelection();
@@ -772,11 +774,13 @@ export default class Tutorial {
             // Call an action at 500ms
             const hold500ms = setTimeout(() => {
               this.lightshow.injectDeleteBlink(true);
+              this.colorSelectOverlay.startFlashingRed();
               Notification.message("Deleting Color");
-            }, 500);
+            }, 1000);
             this.holdTimeouts.push(hold500ms);
             return;
           }
+          this.colorSelectOverlay.stopFlashingRed();
           this.holdTimeouts.forEach(timeout => clearTimeout(timeout));
           this.holdTimeouts = []; // Reset the timeouts
           this.lightshow.injectDeleteBlink(false);
@@ -934,7 +938,7 @@ export default class Tutorial {
     this.updateTutorialStep(this.currentStep);
 
     // skip to a step
-    this.gotoStep('Pattern Select Menu', true);
+    //this.gotoStep('Pattern Select Menu', true);
     //this.gotoStep('Pick a Color Slot', true);
 
     // disable duoImage context menu

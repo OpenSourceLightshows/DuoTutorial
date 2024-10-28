@@ -138,8 +138,8 @@ export default class ColorSelectOverlay {
     }
   }
 
-  startFlashingRed(index) {
-    const slot = this.overlayElement.querySelector(`.slot[data-index="${index}"]`);
+  startFlashingRed() {
+    const slot = this.overlayElement.querySelector(`dropdown-option-selected`);
     slot.classList.add('flashing-red');
   }
 
@@ -155,6 +155,7 @@ export default class ColorSelectOverlay {
     this.hueValue = -1;
     this.satValue = -1;
     this.showHueQuadrantDropdown();
+    this.selectedDropdownIndex = 0;
   }
 
   activateHueSelection(backwards = false) {
