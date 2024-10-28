@@ -139,26 +139,12 @@ export default class TutorialTree {
   // Handle navigation to different states based on the tree
   navigateToState(...stateIds) {
     const previousState = this.currentState; // Track the previous state
-
-    if (stateIds.length === 1) {
-      // Single state navigation
-      const singleState = stateIds[0];
-      const path = this.findStatePath(singleState);
-      if (path) {
-        this.expandAndActivate(path, this.findStatePath(previousState));
-      } else {
-        console.warn(`State ${singleState} not found in the tree.`);
-      }
-    } else if (stateIds.length > 1) {
-      // Multi-state navigation
-      const path = this.findStatePathByFullPath(stateIds);
-      if (path) {
-        this.expandAndActivate(path, this.findStatePath(previousState));
-      } else {
-        console.warn(`Path ${stateIds.join(' -> ')} not found in the tree.`);
-      }
+    // Multi-state navigation
+    const path = this.findStatePathByFullPath(stateIds);
+    if (path) {
+      this.expandAndActivate(path, this.findStatePath(previousState));
     } else {
-      console.warn('Invalid state IDs provided.');
+      console.warn(`Path ${stateIds.join(' -> ')} not found in the tree.`);
     }
   }
 
@@ -240,13 +226,12 @@ export default class TutorialTree {
 
   // Expand and activate the node and its parent path
   expandAndActivate(statePath, previousPath = null) {
-    const targetNodeId = statePath[statePath.length - 1]; // The final target node we're navigating to
-    const curNode = this.map[targetNodeId];
-
     // Collapse unrelated parents if we have a previous path
-    if (previousPath) {
-      this.collapseUnrelatedParents(statePath, previousPath);
-    }
+    this.collapseAll();
+
+    // The final target node we're navigating to
+    const targetNodeId = statePath[statePath.length - 1];
+    const curNode = this.map[targetNodeId];
 
     // Expand all parent nodes, but not the target node itself
     const parents = this.findParents(statePath);
@@ -255,7 +240,7 @@ export default class TutorialTree {
     });
 
     // Ensure the target node is not expanded but is selected (active)
-    curNode.isExpanded = false; // Don't expand the target node unless explicitly navigated inside
+    curNode.isExpanded = false;
 
     // Re-render the tree after adjusting the parent expansions
     const treeContainer = document.getElementById('tutorialTree');
@@ -268,23 +253,10 @@ export default class TutorialTree {
     this.updateActiveState(treeContainer, targetNodeId);
   }
 
-  collapseUnrelatedParents(newStatePath, previousStatePath) {
-    // Find the common parent between the two paths
-    const minLength = Math.min(newStatePath.length, previousStatePath.length);
-    let divergingIndex = 0;
-
-    for (let i = 0; i < minLength; i++) {
-      if (newStatePath[i] !== previousStatePath[i]) {
-        divergingIndex = i;
-        break;
-      }
-    }
-
-    // Collapse any nodes that are no longer part of the new path
-    for (let i = divergingIndex; i < previousStatePath.length; i++) {
-      const parentId = previousStatePath[i];
-      if (this.map[parentId]) {
-        this.map[parentId].isExpanded = false;
+  collapseAll() {
+    for (const key in this.map) {
+      if (this.map[key].children) {
+        this.map[key].isExpanded = false;
       }
     }
   }

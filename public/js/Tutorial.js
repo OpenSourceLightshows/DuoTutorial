@@ -330,7 +330,12 @@ export default class Tutorial {
             return;
           }
           if (dur < 250) {
-            Notification.message("Randomized a new mode");
+            if (this.stepData.targetLed === 'Both Leds') {
+              Notification.message("Randomized Both Leds");
+            } else {
+              // randomized tip or top led
+              Notification.message("Randomized the " + this.stepData.targetLed);
+            }
             this.vortexLib.Vortex.shortClick(0);
           } else {
             this.tutorialTree.navigateToState('state-mode-' + this.vortexLib.Vortex.curModeIndex());
@@ -959,8 +964,9 @@ export default class Tutorial {
             'Max Brightness'
           ];
           if (dur < 250) {
-            this.stepData.clickCounter++;
-            this.stepData.selectedBrightness = brightnessOptions[(this.stepData.clickCounter + 4) % 5];
+            let currentIndex = brightnessOptions.indexOf(this.stepData.selectedBrightness);
+            currentIndex = (currentIndex + 1) % brightnessOptions.length;
+            this.stepData.selectedBrightness = brightnessOptions[currentIndex];
             Notification.message("Selected " + this.stepData.selectedBrightness);
             this.vortexLib.Vortex.shortClick(0);
           } else {
@@ -1005,7 +1011,8 @@ export default class Tutorial {
             this.stepData.selectedReset = 'Begin Reset';
             Notification.message("Selected " + this.stepData.selectedReset);
             this.vortexLib.Vortex.shortClick(0);
-            this.tutorialTree.navigateToState('state-mode-0', 'state-menu-5', 'state-factory-reset-confirm');
+            this.tutorialTree.navigateToState('state-mode-' + this.vortexLib.Vortex.curModeIndex(),
+              'state-menu-5', 'state-factory-reset-confirm');
             this.nextStep();
           } else {
             this.tutorialTree.navigateToState('state-mode-' + this.vortexLib.Vortex.curModeIndex());
