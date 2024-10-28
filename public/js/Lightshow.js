@@ -37,6 +37,9 @@ export default class Lightshow {
     this.targetLeds = [0];
     this.enabled = false;
 
+    // extra hack to fake deletion
+    this.injectDelete = false;
+
     // Initialize histories for each LED
     this.updateHistories();
   }
@@ -255,11 +258,32 @@ export default class Lightshow {
   flashDraw() {
     if (this._pause) return;
 
-    const newColor = this.vortexLib.RunTick(this.vortex);
+    const newColor = this.vortexLib.Tick();
     if (newColor) {
     }
 
     this.animationFrameId = requestAnimationFrame(this.boundFlashDraw);
+  }
+
+  doTick() {
+    const leds = this.vortexLib.Tick();
+    const time = Date.now(); // Current time in milliseconds
+
+    // Set up sine wave pulse, scaling the amplitude to vary brightness between 0 and 255
+    const pulse = Math.floor((Math.sin(time / 500) + 1) * 127.5); // 500ms controls the speed of pulsing
+
+    if (this.injectDelete) {
+      // Apply the pulsing brightness to red LEDs
+      leds[0].red = pulse;
+      leds[0].green = 0;
+      leds[0].blue = 0;
+
+      leds[1].red = pulse;
+      leds[1].green = 0;
+      leds[1].blue = 0;
+    }
+
+    return leds;
   }
 
   feedCirclePoints() {
@@ -273,7 +297,7 @@ export default class Lightshow {
     let lastFlashTime = Date.now();  // To track flash timing
 
     for (let i = 0; i < this.tickRate; i++) {
-      const leds = this.vortexLib.Tick();
+      const leds = this.doTick()
       if (!leds) {
         continue;
       }
@@ -306,7 +330,7 @@ export default class Lightshow {
     const scale = (this.radius / 20) + 1;
 
     for (let i = 0; i < this.tickRate; i++) {
-      const leds = this.vortexLib.Tick();
+      const leds = this.doTick();
       if (!leds) {
         continue;
       }
@@ -340,7 +364,7 @@ export default class Lightshow {
     const baseBoxSize = Math.min(centerX, centerY) - (500 - parseInt(this.radius));  // Start with a reasonable base size for visibility
 
     for (let i = 0; i < this.tickRate; i++) {
-      const leds = this.vortexLib.Tick();
+      const leds = this.doTick();
       if (!leds) {
         continue;
       }
@@ -387,7 +411,7 @@ export default class Lightshow {
     const centerY = this.canvas.height / 2;
 
     for (let i = 0; i < this.tickRate; i++) {
-      const leds = this.vortexLib.Tick();
+      const leds = this.doTick();
       if (!leds) {
         continue;
       }
@@ -510,5 +534,9 @@ export default class Lightshow {
     targetLeds.forEach(ledIndex => {
       this.setColorset(set, [ledIndex]);
     });
+  }
+
+  injectDeleteBlink(inject) {
+    this.injectDelete = inject;
   }
 }

@@ -497,12 +497,11 @@ body, html {
   height: 30px;
   margin: 3px;
   border-radius: 50%;
-  cursor: pointer;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
-  border: 2px solid gray;
+  border: 2px solid transparent;
 }
 
 .color-slot {
@@ -510,7 +509,7 @@ body, html {
 }
 
 .slot-selected {
-  box-shadow: 0 0 5px 2px yellow; /* Set shadow color from element's own background color */
+  box-shadow: 0 0 5px 4px yellow; /* Set shadow color from element's own background color */
 }
 
 /* Empty Slot */
@@ -548,6 +547,110 @@ body, html {
   animation: flashRed 1s infinite;
 }
 
+/* =======================================
+   Color Select Dropdown Steps
+   ======================================= */
+
+/* Color Step Dropdown */
+.dropdown {
+  position: absolute;
+  border-radius: 12px;
+  padding: 10px;
+  display: flex;
+  gap: 10px;
+  transition: all 0.3s ease-in-out;
+  z-index: 1500;
+  align-items: center;
+}
+
+.dropdown-title {
+  color: #fff;
+  text-align: center;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 18px;
+}
+
+/* Step Option Boxes */
+.dropdown-option {
+  width: 40px;
+  height: 40px;
+  border-radius: 4px;
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.dropdown-option-selected {
+  box-shadow: 0 0 5px 2px yellow; /* Set shadow color from element's own background color */
+}
+
+.dropdown-options-container {
+  display: flex;
+  gap: 10px;
+}
+
+.dropdown-exit-option {
+  background-color: #280000;
+  text-align: center;
+  align-items: center;
+}
+
+.dropdown-option-back-icon {
+  top: 5px;
+  margin: 5px auto;
+  color: white;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 28px;
+}
+
+/* Dropdown Container Styling */
+.instructions-list {
+  margin: 10px;
+  color: #ddd;
+}
+
+.instructions-list li strong {
+  font-weight: bold;
+  color: #DDD;
+}
+
+.instructions-list li span {
+  font-weight: normal;
+  color: #aaa;
+  display: block;
+  font-size: 14px;
+  margin-top: 8px;
+}
+
+.static-box-container {
+  display: flex;
+  align-items: center;
+  margin: 10px;
+}
+
+.static-box {
+  width: 20px;
+  height: 20px;
+  margin-right: 7px;
+  border-radius: 4px;
+  display: inline-block;
+  box-shadow: 3px 3px 10px 4px rgba(0, 0, 0, 0.3);
+  vertical-align: middle;
+}
+
+.static-box-container span {
+  margin-left: 8px;
+  font-size: 14px;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 500px) {
+  .dropdown-option {
+    width: 30px;
+    height: 30px;
+  }
+}
+
+
+
 /* Flashing Red Keyframes */
 @keyframes flashRed {
   50% {
@@ -570,6 +673,28 @@ body, html {
   .slot-plus-icon {
     font-size: 28px;
   }
+
+  .dropdown {
+    padding: 6px;
+  }
+
+  .dropdown-title {
+    font-size: 12px;
+  }
+
+  .dropdown-option {
+    width: 24px;
+    height: 24px;
+  }
+
+  .dropdown-options-container {
+    gap: 6px;
+  }
+
+  .dropdown-option-back-icon {
+    margin-top: 3px;
+    font-size: 16px;
+  }
 }
 
 @media (max-width: 700px) {
@@ -586,6 +711,28 @@ body, html {
   .slot-plus-icon {
     font-size: 24px;
   }
+
+  .dropdown {
+    padding: 4px;
+  }
+
+  .dropdown-title {
+    font-size: 10px;
+  }
+
+  .dropdown-option {
+    width: 20px;
+    height: 20px;
+  }
+
+  .dropdown-options-container {
+    gap: 4px;
+  }
+
+  .dropdown-option-back-icon {
+    margin-top: 2px;
+    font-size: 14px;
+  }
 }
 
 @media (max-width: 600px) {
@@ -600,6 +747,28 @@ body, html {
 
   .slot-plus-icon {
     font-size: 20px;
+  }
+
+  .dropdown {
+    padding: 3px;
+  }
+
+  .dropdown-title {
+    font-size: 10px;
+  }
+
+  .dropdown-option {
+    width: 16px;
+    height: 16px;
+  }
+
+  .dropdown-options-container {
+    gap: 3px;
+  }
+
+  .dropdown-option-back-icon {
+    margin-top: 2px;
+    font-size: 10px;
   }
 }
 
@@ -617,6 +786,28 @@ body, html {
   .slot-plus-icon {
     font-size: 16px;
   }
+
+  .dropdown {
+    padding: 2px;
+  }
+
+  .dropdown-title {
+    font-size: 10px;
+  }
+
+  .dropdown-option {
+    width: 14px;
+    height: 14px;
+  }
+
+  .dropdown-options-container {
+    gap: 2px;
+  }
+
+  .dropdown-option-back-icon {
+    margin-top: 2px;
+    font-size: 8px;
+  }
 }
 
 @media (max-width: 400px) {
@@ -627,6 +818,28 @@ body, html {
 
   .slot-plus-icon {
     font-size: 12px;
+  }
+
+  .dropdown {
+    padding: 4px;
+  }
+
+  .dropdown-title {
+    font-size: 8px;
+  }
+
+  .dropdown-option {
+    width: 12px;
+    height: 12px;
+  }
+
+  .dropdown-options-container {
+    gap: 4px;
+  }
+
+  .dropdown-option-back-icon {
+    margin-top: 1px;
+    font-size: 8px;
   }
 }
 

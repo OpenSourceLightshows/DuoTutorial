@@ -20,6 +20,7 @@ export default class Tutorial {
       curMenu: 'Randomizer',
       targetLed: 'Both Leds',
       colSlot: 0,
+      selectedPattern: 'Strobe',
     };
 
     this.steps = [
@@ -501,8 +502,8 @@ export default class Tutorial {
         content: () => `First, short click to pick which leds will be targeted, then long click to choose those leds<br>Targeting: ${this.stepData.targetLed}`,
         buttonTime: 0.25,
         prepare: () => {
-          this.vortexLib.Vortex.shortClick(0);
-          this.vortexLib.Vortex.shortClick(0);
+          //this.vortexLib.Vortex.shortClick(0);
+          //this.vortexLib.Vortex.shortClick(0);
           this.vortexLib.Vortex.menuEnterClick(0);
           this.vortexLib.Vortex.shortClick(0);
           this.vortexLib.Vortex.shortClick(0);
@@ -551,11 +552,43 @@ export default class Tutorial {
         content: "Short click to cycle through the colors of this mode, long click one to edit the color, or the gray blink to add new",
         buttonTime: 0.25,
         prepare: () => {
+          //this.vortexLib.Vortex.shortClick(0);
+          //this.vortexLib.Vortex.shortClick(0);
+          this.vortexLib.Vortex.menuEnterClick(0);
+          this.vortexLib.Vortex.shortClick(0);
+          this.vortexLib.Vortex.shortClick(0);
+          this.vortexLib.Vortex.longClick(0);
+          this.vortexLib.Vortex.longClick(0);
+          this.lightshow.toggleEnabled();
+          this.tutorialTree.navigateToState('state-mode-0', 'state-menu-2', 'state-color-select');
+
+            var set = new this.vortexLib.Colorset();
+            this.vortexLib.Vortex.getColorset(this.vortexLib.LedPos.LED_0, set);
+            let setArr = [];
+            for (let i = 0; i < set.numColors(); ++i) {
+              const color = set.get(i);
+              const hexColor = `#${((1 << 24) + (color.red << 16) + (color.green << 8) + color.blue).toString(16).slice(1).toUpperCase()}`;
+              setArr.push(hexColor);
+            }
+            this.colorSelectOverlay.initialize(setArr);
+
+
+
         },
         action: (type, dur) => {
           if (type != 'up') {
+            //// Call an action at 500ms
+            //const hold500ms = setTimeout(() => {
+            //  console.log("Deleting");
+            //}, 500);
+
+            //// Store timeouts to clear them on early release
+            //this.holdTimeouts.push(hold500ms, hold1250ms);
+
+            //this.vortexLib.Vortex.pressButton(0);
             return;
           }
+            //this.vortexLib.Vortex.releaseButton(0);
           if (dur < 250) {
             // add 1 for readability
             this.vortexLib.Vortex.shortClick(0);
@@ -570,6 +603,7 @@ export default class Tutorial {
           Notification.success(this.colorSelectOverlay.selectedName);
           this.tutorialTree.navigateToState('state-mode-' + this.vortexLib.Vortex.curModeIndex(),
             'state-menu-2', 'state-color-select-quad');
+          this.colorSelectOverlay.activateQuadrantSelection();
           this.vortexLib.Vortex.longClick(0);
           this.nextStep();
         }
@@ -580,6 +614,29 @@ export default class Tutorial {
         content: "Short click to cycle through the four quadrants, long click to pick one",
         buttonTime: 0.25,
         prepare: () => {
+          //this.vortexLib.Vortex.shortClick(0);
+          //this.vortexLib.Vortex.shortClick(0);
+          this.vortexLib.Vortex.menuEnterClick(0);
+          this.vortexLib.Vortex.shortClick(0);
+          this.vortexLib.Vortex.shortClick(0);
+          this.vortexLib.Vortex.longClick(0);
+          this.vortexLib.Vortex.longClick(0);
+          this.vortexLib.Vortex.longClick(0);
+          this.lightshow.toggleEnabled();
+          this.tutorialTree.navigateToState('state-mode-0', 'state-menu-2', 'state-color-select-quad');
+
+            var set = new this.vortexLib.Colorset();
+            this.vortexLib.Vortex.getColorset(this.vortexLib.LedPos.LED_0, set);
+            let setArr = [];
+            for (let i = 0; i < set.numColors(); ++i) {
+              const color = set.get(i);
+              const hexColor = `#${((1 << 24) + (color.red << 16) + (color.green << 8) + color.blue).toString(16).slice(1).toUpperCase()}`;
+              setArr.push(hexColor);
+            }
+            this.colorSelectOverlay.initialize(setArr);
+
+
+          this.colorSelectOverlay.activateQuadrantSelection();
         },
         action: (type, dur) => {
           if (type != 'up') {
@@ -587,11 +644,22 @@ export default class Tutorial {
           }
           if (dur < 250) {
             this.vortexLib.Vortex.shortClick(0);
+            this.colorSelectOverlay.iterateDropdownSelection();
           } else {
-            this.tutorialTree.navigateToState('state-mode-' + this.vortexLib.Vortex.curModeIndex(),
-              'state-menu-2', 'state-color-select-hue');
-            this.vortexLib.Vortex.longClick(0);
-            this.nextStep();
+            if (this.colorSelectOverlay.selectedDropdownIndex === 4) {
+              // go back
+              this.tutorialTree.navigateToState('state-mode-' + this.vortexLib.Vortex.curModeIndex(),
+                'state-menu-2', 'state-color-select');
+              this.colorSelectOverlay.closeDropdown();
+              this.vortexLib.Vortex.longClick(0);
+              this.gotoStep('Pick a Color Slot');
+            } else {
+              this.tutorialTree.navigateToState('state-mode-' + this.vortexLib.Vortex.curModeIndex(),
+                'state-menu-2', 'state-color-select-hue');
+              this.colorSelectOverlay.activateHueSelection();
+              this.vortexLib.Vortex.longClick(0);
+              this.nextStep();
+            }
           }
         }
       },
@@ -608,11 +676,22 @@ export default class Tutorial {
           }
           if (dur < 250) {
             this.vortexLib.Vortex.shortClick(0);
+            this.colorSelectOverlay.iterateDropdownSelection();
           } else {
-            this.tutorialTree.navigateToState('state-mode-' + this.vortexLib.Vortex.curModeIndex(),
-              'state-menu-2', 'state-color-select-sat');
-            this.vortexLib.Vortex.longClick(0);
-            this.nextStep();
+            if (this.colorSelectOverlay.selectedDropdownIndex === 4) {
+              // go back
+              this.tutorialTree.navigateToState('state-mode-' + this.vortexLib.Vortex.curModeIndex(),
+                'state-menu-2', 'state-color-select-quad');
+              this.colorSelectOverlay.activateQuadrantSelection(true);
+              this.vortexLib.Vortex.longClick(0);
+              this.gotoStep('Pick a Hue Quadrant');
+            } else {
+              this.tutorialTree.navigateToState('state-mode-' + this.vortexLib.Vortex.curModeIndex(),
+                'state-menu-2', 'state-color-select-sat');
+              this.colorSelectOverlay.activateSaturationSelection();
+              this.vortexLib.Vortex.longClick(0);
+              this.nextStep();
+            }
           }
         }
       },
@@ -629,11 +708,22 @@ export default class Tutorial {
           }
           if (dur < 250) {
             this.vortexLib.Vortex.shortClick(0);
+            this.colorSelectOverlay.iterateDropdownSelection();
           } else {
-            this.tutorialTree.navigateToState('state-mode-' + this.vortexLib.Vortex.curModeIndex(),
-              'state-menu-2', 'state-color-select-val');
-            this.vortexLib.Vortex.longClick(0);
-            this.nextStep();
+            if (this.colorSelectOverlay.selectedDropdownIndex === 4) {
+              // go back
+              this.tutorialTree.navigateToState('state-mode-' + this.vortexLib.Vortex.curModeIndex(),
+                'state-menu-2', 'state-color-select-hue');
+              this.colorSelectOverlay.activateHueSelection(true);
+              this.vortexLib.Vortex.longClick(0);
+              this.gotoStep('Pick a Hue');
+            } else {
+              this.tutorialTree.navigateToState('state-mode-' + this.vortexLib.Vortex.curModeIndex(),
+                'state-menu-2', 'state-color-select-val');
+              this.colorSelectOverlay.activateBrightnessSelection();
+              this.vortexLib.Vortex.longClick(0);
+              this.nextStep();
+            }
           }
         }
       },
@@ -650,25 +740,46 @@ export default class Tutorial {
           }
           if (dur < 250) {
             this.vortexLib.Vortex.shortClick(0);
+            this.colorSelectOverlay.iterateDropdownSelection();
           } else {
-            this.tutorialTree.navigateToState('state-mode-' + this.vortexLib.Vortex.curModeIndex(),
-              'state-menu-2', 'state-color-select');
-            this.vortexLib.Vortex.longClick(0);
-            this.gotoStep();
+            if (this.colorSelectOverlay.selectedDropdownIndex === 4) {
+              // go back
+              this.tutorialTree.navigateToState('state-mode-' + this.vortexLib.Vortex.curModeIndex(),
+                'state-menu-2', 'state-color-select-sat');
+              this.colorSelectOverlay.activateSaturationSelection(true);
+              this.vortexLib.Vortex.longClick(0);
+              this.gotoStep('Pick a Saturation');
+            } else {
+              this.tutorialTree.navigateToState('state-mode-' + this.vortexLib.Vortex.curModeIndex(),
+                'state-menu-2', 'state-color-select');
+              this.colorSelectOverlay.closeDropdown();
+              this.colorSelectOverlay.saveColor();
+              this.vortexLib.Vortex.longClick(0);
+              this.nextStep();
+            }
           }
         }
       },
       // ================================================================================
       {
-        title: "Pick a Color Slot or Exit",
-        content: "Great you changed a color, either add/edit another color or exit",
+        title: "Edit or Delete a Color Slot, or Exit",
+        content: "Great you changed a color, either add/edit another color or exit. You can delete a color by holding down on the color till it flashes red",
         buttonTime: 0.25,
         prepare: () => {
         },
         action: (type, dur) => {
           if (type != 'up') {
+            // Call an action at 500ms
+            const hold500ms = setTimeout(() => {
+              this.lightshow.injectDeleteBlink(true);
+              Notification.message("Deleting Color");
+            }, 500);
+            this.holdTimeouts.push(hold500ms);
             return;
           }
+          this.holdTimeouts.forEach(timeout => clearTimeout(timeout));
+          this.holdTimeouts = []; // Reset the timeouts
+          this.lightshow.injectDeleteBlink(false);
           if (dur < 250) {
             // add 1 for readability
             this.vortexLib.Vortex.shortClick(0);
@@ -676,26 +787,140 @@ export default class Tutorial {
             Notification.message(this.colorSelectOverlay.selectedName);
             return;
           }
+          if (dur >= 500 && this.colorSelectOverlay.selectionType() === 0) {
+            Notification.success("Deleted Color");
+            this.vortexLib.Vortex.deleteColClick(0);
+            this.colorSelectOverlay.deleteColor();
+            return;
+          }
           if (this.colorSelectOverlay.selectionType() == 2) {
-            Notification.failure("That is exit, try to add or edit a color");
+            Notification.success("Exiting Color Select");
+            this.tutorialTree.navigateToState('state-mode-' + this.vortexLib.Vortex.curModeIndex());
+            this.colorSelectOverlay.close();
+            this.vortexLib.Vortex.longClick(0);
+            this.gotoStep('Understand Where You Are');
             return;
           }
           Notification.success(this.colorSelectOverlay.selectedName);
           this.tutorialTree.navigateToState('state-mode-' + this.vortexLib.Vortex.curModeIndex(),
             'state-menu-2', 'state-color-select-quad');
+          this.colorSelectOverlay.activateQuadrantSelection();
           this.vortexLib.Vortex.longClick(0);
-          this.nextStep();
+          this.gotoStep('Pick a Hue Quadrant');
+        }
+      },
 
+      // ================================================================================
+      //  Pattern Select Menu
+      // ================================================================================
+      {
+        title: "Pattern Select Menu",
+        content: () => `First, short click to pick which leds will be targeted, then long click to choose those leds<br>Targeting: ${this.stepData.targetLed}`,
+        buttonTime: 0.25,
+        prepare: () => {
+          //this.vortexLib.Vortex.shortClick(0);
+          //this.vortexLib.Vortex.shortClick(0);
+          this.vortexLib.Vortex.menuEnterClick(0);
+          this.vortexLib.Vortex.shortClick(0);
+          this.vortexLib.Vortex.shortClick(0);
+          this.vortexLib.Vortex.shortClick(0);
+          this.vortexLib.Vortex.longClick(0);
+          this.lightshow.toggleEnabled();
+          this.tutorialTree.navigateToState('state-mode-0', 'state-menu-3', 'state-led-select');
+        },
+        action: (type, dur) => {
+          if (type != 'up') {
+            return;
+          }
+          const options = [
+            'Both Leds',
+            'Tip Led',
+            'Top Led'
+          ];
+          // target is current click count option
+          this.stepData.targetLed = options[this.stepData.clickCounter % 3];
           if (dur < 250) {
+            // unless they click the re-assign target
+            this.stepData.targetLed = options[++this.stepData.clickCounter % 3];
+            Notification.message("Selected " + this.stepData.targetLed);
             this.vortexLib.Vortex.shortClick(0);
           } else {
             this.tutorialTree.navigateToState('state-mode-' + this.vortexLib.Vortex.curModeIndex(),
-              'state-menu-2', 'state-color-select');
+              'state-menu-3', 'state-pattern-select');
             this.vortexLib.Vortex.longClick(0);
-            this.gotoStep();
+            Notification.success("Good, you picked the leds to be targeted by the menu");
+            this.nextStep();
           }
         }
       },
+      // ================================================================================
+      {
+        title: "Pattern Selection",
+        content: () => `Short click to cycle through patterns, long click to choose the pattern`,
+        buttonTime: 0.25,
+        prepare: () => {
+          //this.vortexLib.Vortex.shortClick(0);
+          //this.vortexLib.Vortex.shortClick(0);
+          this.vortexLib.Vortex.menuEnterClick(0);
+          this.vortexLib.Vortex.shortClick(0);
+          this.vortexLib.Vortex.shortClick(0);
+          this.vortexLib.Vortex.shortClick(0);
+          this.vortexLib.Vortex.longClick(0);
+          this.lightshow.toggleEnabled();
+          this.tutorialTree.navigateToState('state-mode-0', 'state-menu-3', 'state-led-select');
+        },
+        action: (type, dur) => {
+          if (type != 'up') {
+            return;
+          }
+          const patternList = [
+            'Strobe',
+            'Hyperstrobe',
+            'Picostrobe',
+            'Strobie',
+            'Dops',
+            'Ultradops',
+            'Strobegap',
+            'Hypergap',
+            'Picogap',
+            'Strobiegap',
+            'Dopsgap',
+            'Ultragap',
+            'Blinkie',
+            'Ghostcrush',
+            'Doubledops',
+            'Chopper',
+            'Dashgap',
+            'Dashdops',
+            'Dashcrush',
+            'Ultradash',
+            'Gapcycle',
+            'Dashcycle',
+            'Tracer',
+            'Ribbon',
+            'Miniribbon',
+            'Blend',
+            'Blendstrobe',
+            'Blendstrobegap',
+            'Complementary Blend',
+            'Complementary Blendstrobe',
+            'Complementary Blendstrobegap',
+            'Solid',
+          ];
+          if (dur < 250) {
+            this.stepData.selectedPattern = patternList[this.stepData.clickCounter % patternList.length];
+            this.stepData.clickCounter++;
+            Notification.message(`Showing Pattern '${this.stepData.selectedPattern}'`);
+            this.vortexLib.Vortex.shortClick(0);
+          } else {
+            this.tutorialTree.navigateToState('state-mode-' + this.vortexLib.Vortex.curModeIndex());
+            this.vortexLib.Vortex.longClick(0);
+            Notification.success(`You selected the pattern '${this.stepData.selectedPattern}'`);
+            this.gotoStep('Understand Where You Are');
+          }
+        }
+      },
+
     ];
   }
 
@@ -709,7 +934,7 @@ export default class Tutorial {
     this.updateTutorialStep(this.currentStep);
 
     // skip to a step
-    //this.gotoStep('Color Select Menu', true);
+    this.gotoStep('Pattern Select Menu', true);
     //this.gotoStep('Pick a Color Slot', true);
 
     // disable duoImage context menu

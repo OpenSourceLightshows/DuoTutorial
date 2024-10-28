@@ -22,9 +22,9 @@ export default class TutorialTree {
       'state-menu-0': { label: 'Randomizer', children: ['state-led-select', 'state-randomizing'] },
       'state-menu-1': { label: 'Mode Sharing', children: ['state-mode-sharing-receive', 'state-mode-sharing-send'] },
       'state-menu-2': { label: 'Color Select', children: ['state-led-select', 'state-color-select', 'state-color-select-quad', 'state-color-select-hue', 'state-color-select-sat', 'state-color-select-val'] },
-      'state-menu-3': { label: 'Pattern select', children: ['state-led-select'] },
-      'state-menu-4': { label: 'Global Brightness', children: [] },
-      'state-menu-5': { label: 'Factory Reset', children: [] },
+      'state-menu-3': { label: 'Pattern select', children: ['state-led-select', 'state-pattern-select'] },
+      'state-menu-4': { label: 'Global Brightness', children: ['state-global-brightness'] },
+      'state-menu-5': { label: 'Factory Reset', children: ['state-factory-reset', 'state-factory-reset-confirm'] },
 
       // most menus have led select
       'state-led-select': { label: 'Led Selection' },
@@ -41,7 +41,7 @@ export default class TutorialTree {
       'state-color-select-quad': { label: 'Pick Hue Quadrant' },
       'state-color-select-hue': { label: 'Pick Hue' },
       'state-color-select-sat': { label: 'Pick Saturation' },
-      'state-color-select-val': { label: 'Pick Value/Brightness' },
+      'state-color-select-val': { label: 'Pick Brightness' },
 
       // pattern select
       'state-pattern-select': { label: 'Pattern Select' },
@@ -51,6 +51,7 @@ export default class TutorialTree {
 
       // factory reset
       'state-factory-reset': { label: 'Factory Reset' },
+      'state-factory-reset-confirm': { label: 'Perform Reset' },
     };
 
     this.initMap();
@@ -164,6 +165,10 @@ export default class TutorialTree {
   // Recursive function to find the state path for a single node by its key
   findStatePath(targetStateId, currentStateId = 'state-all', path = []) {
     const node = this.map[currentStateId];
+    if (!node) {
+      console.log("Error: missing node: " + currentStateId);
+      return null;
+    }
     path.push(currentStateId);
 
     // If we have reached the target, return the full path including the target node
