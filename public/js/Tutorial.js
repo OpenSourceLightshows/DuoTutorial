@@ -1083,7 +1083,13 @@ export default class Tutorial {
     const deviceButton = document.getElementById('deviceButton');
     if ('ontouchstart' in window) {
       // Mobile device: use touchstart/touchend
-      deviceButton.addEventListener('touchstart', (event) => this.handlePressStart(event));
+      deviceButton.addEventListener('touchstart', (event) => {
+        // Trigger haptic feedback (vibration) on button press
+        if (navigator.vibrate) {
+          navigator.vibrate(50); // Vibrate for 50 milliseconds
+        }
+        this.handlePressStart(event);
+      });
       deviceButton.addEventListener('touchend', (event) => this.handlePressEnd(event));
     } else {
       // Desktop: use mousedown/mouseup
@@ -1095,10 +1101,6 @@ export default class Tutorial {
     document.addEventListener('keydown', (event) => {
       if (event.code === 'Space') {
         this.handlePressStart(event);
-        // Trigger haptic feedback (vibration) on button press
-        if (navigator.vibrate) {
-          navigator.vibrate(50); // Vibrate for 50 milliseconds
-        }
         event.preventDefault(); // Prevent default spacebar behavior (scrolling down the page)
       }
     });
