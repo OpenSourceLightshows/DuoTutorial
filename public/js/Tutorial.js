@@ -1009,7 +1009,7 @@ export default class Tutorial {
       //  Factory Reset Menu
       // ================================================================================
       {
-        title: "Cancel and Exit",
+        title: "Factory Reset Menu",
         content: () => `Long click to cancel and exit. Short click to begin the factory reset process`,
         buttonTime: 0.25,
         prepare: () => {
@@ -1069,7 +1069,7 @@ export default class Tutorial {
             this.tutorialTree.navigateToState('state-mode-' + this.vortexLib.Vortex.curModeIndex(),
               'state-menu-5', 'state-factory-reset');
             this.stepData.selectedReset = 'Exit';
-            this.gotoStep('Cancel and Exit');
+            this.gotoStep('Factory Reset Menu');
           } else {
             if (dur < 3000) {
               Notification.message("Hold longer to reset");
