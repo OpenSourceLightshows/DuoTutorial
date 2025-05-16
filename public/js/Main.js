@@ -29,6 +29,18 @@ VortexLib().then(vortexLib => {
   // Start the lightshow
   lightshow.start();
 
+  // Example way to jump to a step for debugging:
+  //
+  // navigateToState is navigating a tree where each argument is a node of the
+  // tree found in TutorialTree.js
+  //tutorial.tutorialTree.navigateToState('state-mode-0', 'state-menu-1', 'state-mode-sharing-send-receive');
+  // and gotoStep is just jumping to a linear tutorial step as from Tutorial.js
+  //tutorial.gotoStep('Mode Sharing Menu');
+  // turn on the lightshow so it renders
+  //lightshow.toggleEnabled();
+  // perform some click or operations to enter a menu in the engine
+  //vortexLib.Vortex.longClick(0);
+
   // Set up key events for shape changing
   window.addEventListener('keydown', (event) => {
     switch (event.key) {

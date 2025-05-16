@@ -9,7 +9,7 @@ export default class TutorialTree {
 
       // main
       'state-off': { label: 'Off', children: [] },
-      'state-on': { label: 'On', children: ['state-mode-0', 'state-mode-1', 'state-mode-2', 'state-mode-3', 'state-mode-4'] },
+      'state-on': { label: 'On', children: ['state-mode-0', 'state-mode-1', 'state-mode-2', 'state-mode-3', 'state-mode-4', 'state-mode-5', 'state-mode-6', 'state-mode-7', 'state-mode-8'] },
 
       // modes
       'state-mode-0': { label: 'Mode 1', children: ['state-menu-0', 'state-menu-1', 'state-menu-2', 'state-menu-3', 'state-menu-4', 'state-menu-5' ] },
@@ -17,10 +17,20 @@ export default class TutorialTree {
       'state-mode-2': { label: 'Mode 3', children: ['state-menu-0', 'state-menu-1', 'state-menu-2', 'state-menu-3', 'state-menu-4', 'state-menu-5' ] },
       'state-mode-3': { label: 'Mode 4', children: ['state-menu-0', 'state-menu-1', 'state-menu-2', 'state-menu-3', 'state-menu-4', 'state-menu-5' ] },
       'state-mode-4': { label: 'Mode 5', children: ['state-menu-0', 'state-menu-1', 'state-menu-2', 'state-menu-3', 'state-menu-4', 'state-menu-5' ] },
+      'state-mode-5': { label: 'Mode 6', children: ['state-menu-0', 'state-menu-1', 'state-menu-2', 'state-menu-3', 'state-menu-4', 'state-menu-5' ] },
+      'state-mode-6': { label: 'Mode 7', children: ['state-menu-0', 'state-menu-1', 'state-menu-2', 'state-menu-3', 'state-menu-4', 'state-menu-5' ] },
+      'state-mode-7': { label: 'Mode 8', children: ['state-menu-0', 'state-menu-1', 'state-menu-2', 'state-menu-3', 'state-menu-4', 'state-menu-5' ] },
+      'state-mode-8': { label: 'Mode 9', children: ['state-menu-0', 'state-menu-1', 'state-menu-2', 'state-menu-3', 'state-menu-4', 'state-menu-5' ] },
 
       // menus
       'state-menu-0': { label: 'Randomizer', children: ['state-led-select', 'state-randomizing'] },
-      'state-menu-1': { label: 'Mode Sharing', children: ['state-mode-sharing-receive', 'state-mode-sharing-send'] },
+      'state-menu-1': { label: 'Mode Sharing', children:
+        [
+          'state-mode-sharing-send-receive',
+          'state-mode-sharing-send-receive-legacy',
+          'state-mode-sharing-exit'
+        ]
+      },
       'state-menu-2': { label: 'Color Select', children: ['state-led-select', 'state-color-select', 'state-color-select-quad', 'state-color-select-hue', 'state-color-select-sat', 'state-color-select-val'] },
       'state-menu-3': { label: 'Pattern select', children: ['state-led-select', 'state-pattern-select'] },
       'state-menu-4': { label: 'Global Brightness', children: ['state-global-brightness'] },
@@ -33,8 +43,9 @@ export default class TutorialTree {
       'state-randomizing': { label: 'Randomizing' },
 
       // mode sharing
-      'state-mode-sharing-receive': { label: 'Listening for Modes' },
-      'state-mode-sharing-send': { label: 'Sending Mode' },
+      'state-mode-sharing-send-receive': { label: 'Send / Receive Modes' },
+      'state-mode-sharing-send-receive-legacy': { label: 'Send / Receive Modes (Legacy)' },
+      'state-mode-sharing-exit': { label: 'Exit Mode Sharing' },
 
       // color select
       'state-color-select': { label: 'Pick Color Slot' },
@@ -50,7 +61,7 @@ export default class TutorialTree {
       'state-global-brightness': { label: 'Select Brightness' },
 
       // factory reset
-      'state-factory-reset': { label: 'Factory Reset' },
+      'state-factory-reset': { label: 'Cancel and Exit' },
       'state-factory-reset-confirm': { label: 'Perform Reset' },
     };
 

@@ -13,6 +13,7 @@ export default class Tutorial {
     this.tutorialTree = new TutorialTree(this.vortexLib);
     this.colorSelectOverlay = new ColorSelectOverlay();
     this.buttonDown = false;
+    this.numModes = this.vortexLib.Vortex.numModes();
 
     // Step-specific data (e.g., a counter for step 1)
     this.stepData = {
@@ -23,6 +24,7 @@ export default class Tutorial {
       selectedPattern: 'Strobe',
       selectedBrightness: 'Max Brightness',
       selectedReset: 'Exit',
+      modeshareOption: 0,
     };
 
     this.steps = [
@@ -169,9 +171,9 @@ export default class Tutorial {
           }
           this.vortexLib.Vortex.shortClick(0);
           this.stepData.clickCounter++;
-          this.tutorialTree.navigateToState('state-mode-' + (this.vortexLib.Vortex.curModeIndex() + 1) % 5);
-          if (this.vortexLib.Vortex.curModeIndex() < 4) {
-            Notification.message(`Cycled to mode ${(this.stepData.clickCounter + 1) % 6}`);
+          this.tutorialTree.navigateToState('state-mode-' + (this.vortexLib.Vortex.curModeIndex() + 1) % this.numModes);
+          if ((this.vortexLib.Vortex.curModeIndex() + 1) < this.numModes) {
+            Notification.message(`Cycled to mode ${(this.stepData.clickCounter + 1) % (this.numModes + 1)}`);
           } else {
             Notification.success(`You've successfully cycled through all the modes and returned to the first mode.`);
             this.nextStep();
@@ -210,7 +212,7 @@ export default class Tutorial {
               if (dur < 250) {
                 Notification.message("You can open the menus from any mode");
                 this.vortexLib.Vortex.shortClick(0);
-                this.tutorialTree.navigateToState('state-mode-' + (this.vortexLib.Vortex.curModeIndex() + 1) % 5);
+                this.tutorialTree.navigateToState('state-mode-' + (this.vortexLib.Vortex.curModeIndex() + 1) % this.numModes);
               } else if (dur < 500) {
                 Notification.failure("You released the button much too soon");
               } else if (dur >= 500) {
@@ -365,7 +367,7 @@ export default class Tutorial {
           }
           this.stepData.clickCounter++;
           this.vortexLib.Vortex.shortClick(0);
-          const modeIdx = (this.vortexLib.Vortex.curModeIndex() + 1) % 5;
+          const modeIdx = (this.vortexLib.Vortex.curModeIndex() + 1) % this.numModes;
           this.tutorialTree.navigateToState('state-mode-' + modeIdx);
           if (this.stepData.clickCounter > 0) {
             Notification.success("Notice you're back at the main modes");
@@ -408,7 +410,7 @@ export default class Tutorial {
               if (dur < 250) {
                 Notification.message("You can open the menus from any mode");
                 this.vortexLib.Vortex.shortClick(0);
-                this.tutorialTree.navigateToState('state-mode-' + (this.vortexLib.Vortex.curModeIndex() + 1) % 5);
+                this.tutorialTree.navigateToState('state-mode-' + (this.vortexLib.Vortex.curModeIndex() + 1) % this.numModes);
               } else if (dur < 500) {
                 Notification.failure("You released the button much too soon");
               } else if (dur >= 500) {
@@ -473,31 +475,52 @@ export default class Tutorial {
       // ================================================================================
       {
         title: "Mode Sharing Menu",
-        content: () => `The Mode Sharing menu facilitates sending or receiving modes to/from another Duo, the Duo is in receiver mode, short click to send the current mode and long click to leave the menu`,
+        content: () => `The Mode Sharing menu wirelessly shares modes with other Duos (and Chromadecks), here the Duo is in receiver mode, hold the button to continuously send the current mode or short click to cycle to the other options`,
         buttonTime: 0.25,
         prepare: () => {
+          this.stepData.modeshareOption = 0;
+          this.vortexLib.Vortex.menuEnterClick(0); // Enter Mode Sharing
+          this.tutorialTree.navigateToState('state-mode-' + this.vortexLib.Vortex.curModeIndex(),
+            'state-menu-1',
+            'state-mode-sharing-send-receive');
         },
         action: (type, dur) => {
-          if (type != 'up') {
-            return;
-          }
+          if (type !== 'up') return;
+
+          const menuId = 'state-menu-1';
+          const mode = this.vortexLib.Vortex.curModeIndex();
+
           if (dur < 250) {
-            Notification.message("Sending the mode...");
-            this.tutorialTree.navigateToState('state-mode-' + this.vortexLib.Vortex.curModeIndex(),
-                                              'state-menu-1',
-                                              'state-mode-sharing-send');
-            const hold500ms = setTimeout(() => {
-              Notification.message("Done Sending");
-              this.tutorialTree.navigateToState('state-mode-' + this.vortexLib.Vortex.curModeIndex(),
-                                                'state-menu-1',
-                                                'state-mode-sharing-receive');
-            }, 2000);
+            this.stepData.modeshareOption = (this.stepData.modeshareOption + 1) % 3;
+            const stateMap = [
+              'state-mode-sharing-send-receive',
+              'state-mode-sharing-send-receive-legacy',
+              'state-mode-sharing-exit'
+            ];
+            const nameMap = [
+              "Send/Receive",
+              "Send/Receive (Legacy)",
+              "Exit"
+            ];
+            this.tutorialTree.navigateToState('state-mode-' + mode, menuId, stateMap[this.stepData.modeshareOption]);
+            Notification.message(nameMap[this.stepData.modeshareOption]);
             this.vortexLib.Vortex.shortClick(0);
           } else {
-            Notification.success("Leaving the menu");
-            this.tutorialTree.navigateToState('state-mode-' + this.vortexLib.Vortex.curModeIndex());
             this.vortexLib.Vortex.longClick(0);
-            this.gotoStep('Understand Where You Are');
+            switch (this.stepData.modeshareOption) {
+              case 0:
+                Notification.success("Sending Mode...");
+                break;
+              case 1:
+                Notification.success("Sending Mode (Legacy)...");
+                break;
+              case 2:
+              default:
+                Notification.success("Exited Mode Sharing");
+                this.tutorialTree.navigateToState('state-mode-' + mode);
+                this.gotoStep('Understand Where You Are');
+                break;
+            }
           }
         }
       },
@@ -986,8 +1009,8 @@ export default class Tutorial {
       //  Factory Reset Menu
       // ================================================================================
       {
-        title: "Factory Reset Menu",
-        content: () => `Long click to cancel and exit. Short click to begin factory reset`,
+        title: "Cancel and Exit",
+        content: () => `Long click to cancel and exit. Short click to begin the factory reset process`,
         buttonTime: 0.25,
         prepare: () => {
           //this.vortexLib.Vortex.shortClick(0);
@@ -1043,7 +1066,8 @@ export default class Tutorial {
           if (dur < 250) {
             Notification.message("Selected Exit");
             this.vortexLib.Vortex.shortClick(0);
-            this.tutorialTree.navigateToState('state-mode-0', 'state-menu-5', 'state-factory-reset');
+            this.tutorialTree.navigateToState('state-mode-' + this.vortexLib.Vortex.curModeIndex(),
+              'state-menu-5', 'state-factory-reset');
             this.stepData.selectedReset = 'Exit';
             this.gotoStep('Factory Reset Menu');
           } else {

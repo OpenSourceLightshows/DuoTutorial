@@ -139,8 +139,10 @@ export default class ColorSelectOverlay {
   }
 
   startFlashingRed() {
-    const slot = this.overlayElement.querySelector(`dropdown-option-selected`);
-    slot.classList.add('flashing-red');
+    const slot = this.overlayElement.querySelector('.slot-selected');
+    if (slot) {
+      slot.classList.add('flashing-red');
+    }
   }
 
   stopFlashingRed() {
