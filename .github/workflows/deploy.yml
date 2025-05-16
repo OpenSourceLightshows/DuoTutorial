@@ -70,6 +70,11 @@ jobs:
         cp VortexEngine/VortexEngine/VortexLib/VortexLib.js public/js/VortexLib.js
         cp VortexEngine/VortexEngine/VortexLib/VortexLib.wasm public/js/VortexLib.wasm
 
+    # Add cache busters to the index and js
+    - name: Add Cache Busters
+      run: |
+        chmod +x ./add_cache_busters.sh && ./add_cache_busters.sh
+
     # Create .nojekyll to disable Jekyll processing on GitHub Pages
     - name: Create .nojekyll file
       run: echo "" > public/.nojekyll

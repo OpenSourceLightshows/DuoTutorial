@@ -1069,7 +1069,7 @@ export default class Tutorial {
             this.tutorialTree.navigateToState('state-mode-' + this.vortexLib.Vortex.curModeIndex(),
               'state-menu-5', 'state-factory-reset');
             this.stepData.selectedReset = 'Exit';
-            this.gotoStep('Factory Reset Menu');
+            this.gotoStep('Cancel and Exit');
           } else {
             if (dur < 3000) {
               Notification.message("Hold longer to reset");

@@ -303,7 +303,7 @@ body, html {
   font-family: 'Roboto', sans-serif;
   font-size: 12px;
   color: #ddd;
-  z-index: 5000;
+  z-index: 999;
   background-color: rgba(0, 0, 0, 0);
   padding: 10px;
   border-radius: 4px;
@@ -427,54 +427,6 @@ body, html {
   background-color: #007bff;
 }
 
-
-
-
-/* =======================================
-   Tutorial Map (Flowchart-style)
-   ======================================= */
-
-#tutorialMap {
-  position: fixed;
-  top: 10%;
-  right: 10px;
-  width: 300px;
-  height: auto;
-  z-index: 5000;
-  background-color: rgba(0, 0, 0, 0.7);
-  padding: 10px;
-  border-radius: 8px;
-}
-
-.map-node {
-  position: relative;
-  padding: 10px;
-  margin: 10px 0;
-  background-color: #333;
-  color: #fff;
-  border: 1px solid #555;
-  border-radius: 4px;
-  cursor: pointer;
-  text-align: center;
-  transition: background-color 0.3s ease;
-}
-
-.map-node.active {
-  background-color: #28a745;
-}
-
-.map-node:hover {
-  background-color: #555;
-}
-
-/* Line to connect nodes */
-.map-line {
-  position: absolute;
-  width: 2px;
-  background-color: #aaa;
-  transform-origin: 0 0; /* Rotate based on start point */
-  z-index: 4999;
-}
 
 /* =======================================
    Color Select Overlay
